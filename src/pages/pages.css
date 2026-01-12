@@ -1,0 +1,76 @@
+/* Responsive Page Styles */
+
+/* Hero sections */
+@media (max-width: 768px) {
+  .hero, [class*="hero"] {
+    padding: 60px 20px !important;
+  }
+}
+
+/* Main content grids */
+@media (max-width: 1024px) {
+  [style*="gridTemplateColumns: '1fr 380px'"],
+  [style*="gridTemplateColumns: '1fr 400px'"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Stats grids */
+@media (max-width: 768px) {
+  [style*="gridTemplateColumns: 'repeat(4, 1fr)'"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  [style*="gridTemplateColumns: 'repeat(4, 1fr)'"],
+  [style*="gridTemplateColumns: 'repeat(2, 1fr)'"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Solution grids */
+@media (max-width: 768px) {
+  [style*="gridTemplateColumns: 'repeat(2, 1fr)'"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Header flex layouts */
+@media (max-width: 1024px) {
+  [style*="display: 'flex'"][style*="justifyContent: 'space-between'"] {
+    flex-direction: column !important;
+    gap: 30px !important;
+  }
+}
+
+/* Form grids */
+@media (max-width: 640px) {
+  .formGrid, [class*="formGrid"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* General responsive padding */
+@media (max-width: 768px) {
+  [style*="padding: '100px 60px"],
+  [style*="padding: '80px 60px"],
+  [style*="padding: '60px"] {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
+
+/* Mobile menu fix for pages */
+@media (max-width: 1200px) {
+  .main-content {
+    min-height: calc(100vh - 70px);
+  }
+}
+
+/* Ensure proper centering */
+.page-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
