@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AIShowcase from '../components/AIShowcase';
+import CyberpunkCommandCenter from '../components/CyberpunkCommandCenter';
+import DataGalaxy from '../components/DataGalaxy';
+import HolographicHUD from '../components/HolographicHUD';
+import './Analytics.css';
 
 function useCounter(target, duration = 2000) {
   const [count, setCount] = useState(0);
@@ -490,6 +494,15 @@ export default function Analytics() {
 
       {/* AI-First Development Showcase */}
       <AIShowcase />
+
+      {/* Cyberpunk Command Center */}
+      <CyberpunkCommandCenter />
+
+      {/* 3D Data Galaxy */}
+      <DataGalaxy />
+
+      {/* Holographic HUD Interface */}
+      <HolographicHUD />
 
       {/* Charts Section */}
       <section style={{ padding: '80px 60px', background: 'var(--bg-primary)' }}>
