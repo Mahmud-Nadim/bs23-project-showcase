@@ -161,18 +161,65 @@ export default function Clients() {
         <div style={styles.sidebar}>
           <div style={styles.mapPanel}>
             <h3 style={styles.mapTitle}>GLOBAL PRESENCE</h3>
-            <div style={styles.map}>
-              {globalPresence.map((loc) => (
-                <div key={loc.region} style={styles.mapDot(loc.x, loc.y)} title={`${loc.region}: ${loc.clients} clients`} />
-              ))}
-            </div>
-            <div style={styles.regionList}>
-              {globalPresence.map((loc) => (
-                <div key={loc.region} style={styles.regionItem}>
-                  <span style={styles.regionName}>{loc.region}</span>
-                  <span style={styles.regionCount}>{loc.clients}</span>
-                </div>
-              ))}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '20px',
+            }}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                style={{
+                  position: 'relative',
+                  width: '200px',
+                  height: '200px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  boxShadow: '0 0 40px rgba(0, 212, 255, 0.3), 0 0 80px rgba(0, 212, 255, 0.1)',
+                }}
+              >
+                <img
+                  src="https://cdn.pixabay.com/animation/2022/11/13/07/16/07-16-41-513_512.gif"
+                  alt="Global Network"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </motion.div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '10px',
+                width: '100%',
+              }}>
+                {globalPresence.slice(0, 4).map((region, i) => (
+                  <motion.div
+                    key={region.region}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + i * 0.1 }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '8px 12px',
+                      background: 'rgba(0, 212, 255, 0.05)',
+                      border: '1px solid rgba(0, 212, 255, 0.1)',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-secondary)' }}>
+                      {region.region}
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--accent-cyan)' }}>
+                      {region.clients}+
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
 

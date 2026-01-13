@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import CodeAnimation from '../components/CodeAnimation';
+import GlobalPresence from '../components/GlobalPresence';
+import HolographicGallery from '../components/HolographicGallery';
 import './Landing.css';
 
 // Counter Hook
@@ -109,13 +112,13 @@ function Hero() {
   );
 }
 
-// Metrics Section
+// Metrics Section - Updated with latest data
 function Metrics() {
   const metrics = [
-    { value: 2500, suffix: '+', label: 'Projects Delivered' },
-    { value: 800, suffix: '+', label: 'Tech Professionals' },
-    { value: 25, suffix: '+', label: 'Countries Served' },
-    { value: 18, suffix: '+', label: 'Years of Innovation' },
+    { value: 2500, suffix: '+', label: 'Projects Delivered', color: '#00d4ff' },
+    { value: 850, suffix: '+', label: 'Tech Professionals', color: '#00ff88' },
+    { value: 30, suffix: '+', label: 'Countries Served', color: '#9333ea' },
+    { value: 19, suffix: '+', label: 'Years of Innovation', color: '#ffd700' },
   ];
 
   return (
@@ -131,6 +134,7 @@ function Metrics() {
 
 function MetricCard({ metric, index }) {
   const { count, start } = useCounter(metric.value);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
@@ -139,12 +143,28 @@ function MetricCard({ metric, index }) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
       onViewportEnter={start}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className="metric-card"
+      style={{
+        transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0)',
+        boxShadow: isHovered ? `0 20px 40px ${metric.color}30` : 'none',
+        borderColor: isHovered ? metric.color : 'var(--border-default)',
+      }}
     >
-      <div className="metric-value">
+      <motion.div
+        className="metric-value"
+        style={{
+          color: metric.color,
+          textShadow: isHovered ? `0 0 40px ${metric.color}` : `0 0 30px ${metric.color}50`,
+        }}
+        animate={{ scale: isHovered ? 1.1 : 1 }}
+      >
         {count}{metric.suffix}
+      </motion.div>
+      <div className="metric-label" style={{ color: isHovered ? metric.color : undefined }}>
+        {metric.label}
       </div>
-      <div className="metric-label">{metric.label}</div>
     </motion.div>
   );
 }
@@ -290,30 +310,312 @@ function FeaturedProjects() {
   );
 }
 
-// Clients Marquee
+// Enhanced Clients Marquee with Click Flair
 function ClientsMarquee() {
+  const [clickEffects, setClickEffects] = useState([]);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const marqueeRef = useRef(null);
+
   const clients = [
     'City Bank', 'Grameenphone', 'Shwapno', 'HSBC', 'Robi',
     'Othoba', 'British Telecom', 'Incepta', 'PayPal', 'MetLife',
     'Banglalink', 'Cambridge', 'BAT', 'Unilever', 'Telenor'
   ];
 
+  const colors = ['#00d4ff', '#00ff88', '#9333ea', '#ffd700', '#ff6b35', '#ff4444'];
+
+  const handleClick = (e) => {
+    const rect = marqueeRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    // Create explosion effect
+    const newEffect = {
+      id: Date.now(),
+      x,
+      y,
+      color,
+      particles: Array.from({ length: 12 }, (_, i) => ({
+        angle: (i * 30) * (Math.PI / 180),
+        distance: 50 + Math.random() * 50,
+        size: 4 + Math.random() * 8,
+        delay: Math.random() * 0.1,
+      })),
+    };
+
+    setClickEffects(prev => [...prev, newEffect]);
+
+    // Remove effect after animation
+    setTimeout(() => {
+      setClickEffects(prev => prev.filter(effect => effect.id !== newEffect.id));
+    }, 1500);
+  };
+
+  const handleItemClick = (e, client) => {
+    e.stopPropagation();
+    handleClick(e);
+
+    // Create ripple text effect
+    const rect = e.target.getBoundingClientRect();
+    const parentRect = marqueeRef.current?.getBoundingClientRect();
+    if (!parentRect) return;
+
+    const floatingText = {
+      id: Date.now() + 1,
+      text: client,
+      x: rect.left - parentRect.left + rect.width / 2,
+      y: rect.top - parentRect.top,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    };
+
+    setClickEffects(prev => [...prev, { ...floatingText, isText: true }]);
+
+    setTimeout(() => {
+      setClickEffects(prev => prev.filter(effect => effect.id !== floatingText.id));
+    }, 1000);
+  };
+
   return (
-    <section className="clients-marquee">
+    <section
+      className="clients-marquee"
+      ref={marqueeRef}
+      onClick={handleClick}
+      style={{ position: 'relative', cursor: 'crosshair', overflow: 'hidden' }}
+    >
+      {/* Click effect layer */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        pointerEvents: 'none',
+        zIndex: 100,
+      }}>
+        <AnimatePresence>
+          {clickEffects.map((effect) => (
+            effect.isText ? (
+              // Floating text effect
+              <motion.div
+                key={effect.id}
+                initial={{ opacity: 1, y: 0, scale: 1 }}
+                animate={{ opacity: 0, y: -80, scale: 1.5 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1, ease: 'easeOut' }}
+                style={{
+                  position: 'absolute',
+                  left: effect.x,
+                  top: effect.y,
+                  transform: 'translateX(-50%)',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '24px',
+                  fontWeight: 700,
+                  color: effect.color,
+                  textShadow: `0 0 30px ${effect.color}, 0 0 60px ${effect.color}`,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {effect.text}
+              </motion.div>
+            ) : (
+              // Particle explosion effect
+              <React.Fragment key={effect.id}>
+                {/* Central burst */}
+                <motion.div
+                  initial={{ scale: 0, opacity: 1 }}
+                  animate={{ scale: 3, opacity: 0 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  style={{
+                    position: 'absolute',
+                    left: effect.x,
+                    top: effect.y,
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    background: `radial-gradient(circle, ${effect.color}, transparent)`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+
+                {/* Ring effect */}
+                <motion.div
+                  initial={{ scale: 0, opacity: 1 }}
+                  animate={{ scale: 4, opacity: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  style={{
+                    position: 'absolute',
+                    left: effect.x,
+                    top: effect.y,
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '50%',
+                    border: `2px solid ${effect.color}`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+
+                {/* Particles */}
+                {effect.particles.map((particle, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{
+                      x: effect.x,
+                      y: effect.y,
+                      scale: 1,
+                      opacity: 1
+                    }}
+                    animate={{
+                      x: effect.x + Math.cos(particle.angle) * particle.distance,
+                      y: effect.y + Math.sin(particle.angle) * particle.distance,
+                      scale: 0,
+                      opacity: 0,
+                    }}
+                    transition={{
+                      duration: 0.8 + particle.delay,
+                      ease: 'easeOut',
+                      delay: particle.delay,
+                    }}
+                    style={{
+                      position: 'absolute',
+                      width: particle.size,
+                      height: particle.size,
+                      borderRadius: '50%',
+                      background: effect.color,
+                      boxShadow: `0 0 10px ${effect.color}, 0 0 20px ${effect.color}`,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  />
+                ))}
+
+                {/* Sparkle lines */}
+                {[0, 45, 90, 135].map((angle, i) => (
+                  <motion.div
+                    key={`line-${i}`}
+                    initial={{ scale: 0, opacity: 1 }}
+                    animate={{ scale: 1.5, opacity: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.05 }}
+                    style={{
+                      position: 'absolute',
+                      left: effect.x,
+                      top: effect.y,
+                      width: '2px',
+                      height: '40px',
+                      background: `linear-gradient(180deg, transparent, ${effect.color}, transparent)`,
+                      transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                      transformOrigin: 'center center',
+                    }}
+                  />
+                ))}
+              </React.Fragment>
+            )
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* Track 1 */}
       <div className="marquee-track">
         <div className="marquee-content">
           {[...clients, ...clients].map((client, index) => (
-            <span key={index} className="marquee-item">{client}</span>
+            <motion.span
+              key={index}
+              className="marquee-item"
+              onClick={(e) => handleItemClick(e, client)}
+              onMouseEnter={() => setHoveredItem(`1-${index}`)}
+              onMouseLeave={() => setHoveredItem(null)}
+              whileHover={{ scale: 1.2, color: colors[index % colors.length] }}
+              whileTap={{ scale: 0.9 }}
+              style={{
+                cursor: 'pointer',
+                display: 'inline-block',
+                position: 'relative',
+                textShadow: hoveredItem === `1-${index}`
+                  ? `0 0 20px ${colors[index % colors.length]}`
+                  : 'none',
+              }}
+            >
+              {client}
+              {hoveredItem === `1-${index}` && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  style={{
+                    position: 'absolute',
+                    top: '-5px',
+                    right: '-10px',
+                    fontSize: '12px',
+                  }}
+                >
+                  ✦
+                </motion.span>
+              )}
+            </motion.span>
           ))}
         </div>
       </div>
+
+      {/* Track 2 (reverse) */}
       <div className="marquee-track reverse">
         <div className="marquee-content">
           {[...clients, ...clients].reverse().map((client, index) => (
-            <span key={index} className="marquee-item">{client}</span>
+            <motion.span
+              key={index}
+              className="marquee-item"
+              onClick={(e) => handleItemClick(e, client)}
+              onMouseEnter={() => setHoveredItem(`2-${index}`)}
+              onMouseLeave={() => setHoveredItem(null)}
+              whileHover={{ scale: 1.2, color: colors[index % colors.length] }}
+              whileTap={{ scale: 0.9 }}
+              style={{
+                cursor: 'pointer',
+                display: 'inline-block',
+                position: 'relative',
+                textShadow: hoveredItem === `2-${index}`
+                  ? `0 0 20px ${colors[index % colors.length]}`
+                  : 'none',
+              }}
+            >
+              {client}
+              {hoveredItem === `2-${index}` && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  style={{
+                    position: 'absolute',
+                    top: '-5px',
+                    right: '-10px',
+                    fontSize: '12px',
+                  }}
+                >
+                  ✦
+                </motion.span>
+              )}
+            </motion.span>
           ))}
         </div>
       </div>
+
+      {/* Instruction hint */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '10px',
+          color: 'var(--text-muted)',
+          letterSpacing: '2px',
+          pointerEvents: 'none',
+        }}
+      >
+        CLICK FOR MAGIC ✨
+      </motion.div>
     </section>
   );
 }
@@ -353,7 +655,10 @@ export default function Landing() {
     <div className="landing-page">
       <Hero />
       <Metrics />
+      <HolographicGallery />
       <Industries />
+      <GlobalPresence />
+      <CodeAnimation />
       <FeaturedProjects />
       <ClientsMarquee />
       <CTASection />

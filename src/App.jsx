@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -15,6 +15,313 @@ import Contact from './pages/Contact';
 // Styles
 import './App.css';
 import './pages/pages.css';
+
+// Global Click Effects Context
+const ClickEffectsContext = React.createContext(null);
+
+export function useClickEffects() {
+  return React.useContext(ClickEffectsContext);
+}
+
+// Global Click Effect Component
+function GlobalClickEffects() {
+  const [effects, setEffects] = useState([]);
+  const colors = ['#00d4ff', '#00ff88', '#9333ea', '#ffd700', '#ff6b35', '#ff4444', '#3b82f6'];
+
+  const handleClick = useCallback((e) => {
+    // Don't trigger on buttons, links, or interactive elements
+    if (e.target.closest('button, a, input, textarea, select, [role="button"]')) {
+      return;
+    }
+
+    const x = e.clientX;
+    const y = e.clientY;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    const newEffect = {
+      id: Date.now() + Math.random(),
+      x,
+      y,
+      color,
+      type: Math.random() > 0.5 ? 'explosion' : 'ripple',
+      particles: Array.from({ length: 8 }, (_, i) => ({
+        angle: (i * 45) * (Math.PI / 180),
+        distance: 40 + Math.random() * 60,
+        size: 3 + Math.random() * 6,
+        delay: Math.random() * 0.1,
+      })),
+    };
+
+    setEffects(prev => [...prev, newEffect]);
+
+    setTimeout(() => {
+      setEffects(prev => prev.filter(effect => effect.id !== newEffect.id));
+    }, 1200);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [handleClick]);
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      pointerEvents: 'none',
+      zIndex: 99999,
+      overflow: 'hidden',
+    }}>
+      <AnimatePresence>
+        {effects.map((effect) => (
+          <React.Fragment key={effect.id}>
+            {effect.type === 'explosion' ? (
+              <>
+                {/* Central flash */}
+                <motion.div
+                  initial={{ scale: 0, opacity: 1 }}
+                  animate={{ scale: 2.5, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  style={{
+                    position: 'fixed',
+                    left: effect.x,
+                    top: effect.y,
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    background: `radial-gradient(circle, ${effect.color}, transparent)`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+
+                {/* Expanding ring */}
+                <motion.div
+                  initial={{ scale: 0, opacity: 1 }}
+                  animate={{ scale: 3.5, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  style={{
+                    position: 'fixed',
+                    left: effect.x,
+                    top: effect.y,
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '50%',
+                    border: `2px solid ${effect.color}`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+
+                {/* Particles */}
+                {effect.particles.map((particle, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{
+                      x: effect.x,
+                      y: effect.y,
+                      scale: 1,
+                      opacity: 1,
+                    }}
+                    animate={{
+                      x: effect.x + Math.cos(particle.angle) * particle.distance,
+                      y: effect.y + Math.sin(particle.angle) * particle.distance,
+                      scale: 0,
+                      opacity: 0,
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 0.6 + particle.delay,
+                      ease: 'easeOut',
+                      delay: particle.delay,
+                    }}
+                    style={{
+                      position: 'fixed',
+                      width: particle.size,
+                      height: particle.size,
+                      borderRadius: '50%',
+                      background: effect.color,
+                      boxShadow: `0 0 8px ${effect.color}, 0 0 16px ${effect.color}`,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  />
+                ))}
+
+                {/* Cross sparkle */}
+                {[0, 45, 90, 135].map((angle, i) => (
+                  <motion.div
+                    key={`sparkle-${i}`}
+                    initial={{ scale: 0, opacity: 1 }}
+                    animate={{ scale: 1.2, opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35, delay: i * 0.03 }}
+                    style={{
+                      position: 'fixed',
+                      left: effect.x,
+                      top: effect.y,
+                      width: '2px',
+                      height: '30px',
+                      background: `linear-gradient(180deg, transparent, ${effect.color}, transparent)`,
+                      transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                      transformOrigin: 'center center',
+                    }}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                {/* Ripple effect */}
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={`ripple-${i}`}
+                    initial={{ scale: 0, opacity: 0.6 }}
+                    animate={{ scale: 3 + i, opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6 + i * 0.15, delay: i * 0.1, ease: 'easeOut' }}
+                    style={{
+                      position: 'fixed',
+                      left: effect.x,
+                      top: effect.y,
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      border: `1.5px solid ${effect.color}`,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  />
+                ))}
+
+                {/* Center dot */}
+                <motion.div
+                  initial={{ scale: 1, opacity: 1 }}
+                  animate={{ scale: 0, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    position: 'fixed',
+                    left: effect.x,
+                    top: effect.y,
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: effect.color,
+                    boxShadow: `0 0 15px ${effect.color}`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+
+                {/* Floating sparkles */}
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={`float-${i}`}
+                    initial={{
+                      x: effect.x,
+                      y: effect.y,
+                      opacity: 1,
+                      scale: 1,
+                    }}
+                    animate={{
+                      x: effect.x + (Math.random() - 0.5) * 80,
+                      y: effect.y - 40 - Math.random() * 40,
+                      opacity: 0,
+                      scale: 0,
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.8, delay: i * 0.05, ease: 'easeOut' }}
+                    style={{
+                      position: 'fixed',
+                      fontSize: '12px',
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  >
+                    ✦
+                  </motion.div>
+                ))}
+              </>
+            )}
+          </React.Fragment>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// Mouse Trail Effect
+function MouseTrail() {
+  const [trail, setTrail] = useState([]);
+  const frameRef = useRef(null);
+  const lastPosRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const distance = Math.sqrt(
+        Math.pow(e.clientX - lastPosRef.current.x, 2) +
+        Math.pow(e.clientY - lastPosRef.current.y, 2)
+      );
+
+      if (distance > 15) {
+        lastPosRef.current = { x: e.clientX, y: e.clientY };
+
+        const newDot = {
+          id: Date.now() + Math.random(),
+          x: e.clientX,
+          y: e.clientY,
+          color: `hsl(${180 + Math.random() * 60}, 100%, 60%)`,
+        };
+
+        setTrail(prev => [...prev.slice(-15), newDot]);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    if (trail.length === 0) return;
+
+    const cleanup = setInterval(() => {
+      setTrail(prev => prev.slice(1));
+    }, 50);
+
+    return () => clearInterval(cleanup);
+  }, [trail.length]);
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      pointerEvents: 'none',
+      zIndex: 99998,
+    }}>
+      {trail.map((dot, i) => (
+        <motion.div
+          key={dot.id}
+          initial={{ scale: 1, opacity: 0.6 }}
+          animate={{ scale: 0, opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            position: 'fixed',
+            left: dot.x,
+            top: dot.y,
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: dot.color,
+            boxShadow: `0 0 10px ${dot.color}`,
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 // Background Effects
 function BackgroundEffects() {
@@ -300,6 +607,10 @@ function App() {
   return (
     <Router>
       <div className="app">
+        {/* Global Click Effects */}
+        <GlobalClickEffects />
+        <MouseTrail />
+
         <BackgroundEffects />
         <Navigation theme={theme} toggleTheme={toggleTheme} />
         <main className="main-content">

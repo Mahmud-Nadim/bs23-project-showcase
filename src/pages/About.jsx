@@ -181,10 +181,9 @@ export default function About() {
   ];
 
   const leadership = [
-    { name: 'Raisul Kabir', role: 'CEO & FOUNDER', initials: 'RK' },
-    { name: 'Wahid Sadique', role: 'COO', initials: 'WS' },
-    { name: 'Akhlaqur Rahman', role: 'CTO', initials: 'AR' },
-    { name: 'Mashfiqur Rahman', role: 'VP ENGINEERING', initials: 'MR' },
+    { name: 'Raisul Kabir', role: 'CEO & CO-FOUNDER', initials: 'RK', description: 'Co-founded BS23 in 2006, leads global operations' },
+    { name: 'Mohammad Mizanur Rahman', role: 'CTO', initials: 'MR', description: 'AWS expert, Stanford GSB affiliate' },
+    { name: 'MJ Ferdous', role: 'COO', initials: 'MF', description: 'Director overseeing diversified services & regional teams' },
   ];
 
   const values = [
@@ -197,10 +196,10 @@ export default function About() {
   ];
 
   const stats = [
-    { value: '18+', label: 'Years of Excellence' },
+    { value: '19+', label: 'Years of Excellence' },
     { value: '800+', label: 'Tech Professionals' },
     { value: '2500+', label: 'Projects Delivered' },
-    { value: '25+', label: 'Countries Served' },
+    { value: '30+', label: 'Countries Served' },
   ];
 
   return (
@@ -292,11 +291,20 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
+                whileHover={{ scale: 1.02, borderColor: 'var(--accent-cyan)' }}
                 style={styles.leaderCard}
               >
                 <div style={styles.avatar}>{leader.initials}</div>
                 <div style={styles.leaderName}>{leader.name}</div>
                 <div style={styles.leaderRole}>{leader.role}</div>
+                {leader.description && (
+                  <div style={{
+                    fontSize: '12px',
+                    color: 'var(--text-secondary)',
+                    marginTop: '10px',
+                    lineHeight: 1.5,
+                  }}>{leader.description}</div>
+                )}
               </motion.div>
             ))}
           </div>
