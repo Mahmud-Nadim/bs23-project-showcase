@@ -53,54 +53,97 @@ function DataRain({ color = '#00d4ff' }) {
   );
 }
 
-// Radar Pulse Component
+// Radar Pulse Component - Centered and Enhanced
 function RadarPulse({ size = 200, color = '#00d4ff' }) {
+  // Global office locations as radar blips (relative to center at 100,100)
+  const globalOffices = [
+    { x: 100, y: 40, label: 'Japan', delay: 0 },      // Tokyo - North
+    { x: 150, y: 70, label: 'USA', delay: 0.5 },      // Virginia - Northeast
+    { x: 160, y: 110, label: 'UAE', delay: 1 },       // Dubai - East
+    { x: 130, y: 150, label: 'Malaysia', delay: 1.5 }, // KL - Southeast
+    { x: 70, y: 140, label: 'Bangladesh', delay: 2 },  // Dhaka - South (HQ)
+    { x: 50, y: 80, label: 'Germany', delay: 2.5 },   // Bad Zwischenahn - West
+  ];
+
   return (
     <div className="radar-container" style={{ width: size, height: size }}>
       <svg viewBox="0 0 200 200" className="radar-svg">
-        {/* Grid lines */}
+        {/* Outer glow ring */}
+        <circle cx="100" cy="100" r="95" fill="none" stroke={color} strokeWidth="0.5" opacity="0.3" />
+
+        {/* Grid lines - concentric circles */}
         <circle cx="100" cy="100" r="90" className="radar-ring" />
         <circle cx="100" cy="100" r="60" className="radar-ring" />
         <circle cx="100" cy="100" r="30" className="radar-ring" />
-        <line x1="100" y1="10" x2="100" y2="190" className="radar-line" />
-        <line x1="10" y1="100" x2="190" y2="100" className="radar-line" />
 
-        {/* Sweeping beam */}
+        {/* Cross lines - perfectly centered */}
+        <line x1="100" y1="5" x2="100" y2="195" className="radar-line" />
+        <line x1="5" y1="100" x2="195" y2="100" className="radar-line" />
+
+        {/* Diagonal lines for enhanced grid */}
+        <line x1="30" y1="30" x2="170" y2="170" className="radar-line" opacity="0.5" />
+        <line x1="170" y1="30" x2="30" y2="170" className="radar-line" opacity="0.5" />
+
+        {/* Sweeping beam - properly centered from center point */}
         <motion.g
           animate={{ rotate: 360 }}
           transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
           style={{ transformOrigin: '100px 100px' }}
         >
           <defs>
-            <linearGradient id="sweepGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor={color} stopOpacity="0.8" />
+            <linearGradient id="sweepGradient" gradientTransform="rotate(90)">
+              <stop offset="0%" stopColor={color} stopOpacity="0" />
+              <stop offset="50%" stopColor={color} stopOpacity="0.6" />
               <stop offset="100%" stopColor={color} stopOpacity="0" />
             </linearGradient>
+            <radialGradient id="sweepRadial" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor={color} stopOpacity="0.8" />
+              <stop offset="100%" stopColor={color} stopOpacity="0" />
+            </radialGradient>
           </defs>
+          {/* Cone sweep from center */}
           <path
-            d="M 100 100 L 100 10 A 90 90 0 0 1 170 50 Z"
-            fill="url(#sweepGradient)"
+            d="M 100 100 L 100 10 A 90 90 0 0 1 163.64 36.36 Z"
+            fill="url(#sweepRadial)"
           />
+          {/* Center line of sweep */}
           <line x1="100" y1="100" x2="100" y2="10" stroke={color} strokeWidth="2" />
         </motion.g>
 
-        {/* Blips */}
-        {[
-          { x: 130, y: 70, delay: 0 },
-          { x: 60, y: 130, delay: 1 },
-          { x: 150, y: 120, delay: 2 },
-        ].map((blip, i) => (
-          <motion.circle
-            key={i}
-            cx={blip.x}
-            cy={blip.y}
-            r="4"
-            fill={color}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
-            transition={{ duration: 2, repeat: Infinity, delay: blip.delay }}
-            style={{ filter: `drop-shadow(0 0 10px ${color})` }}
-          />
+        {/* Center point indicator */}
+        <circle cx="100" cy="100" r="5" fill={color} opacity="0.8">
+          <animate attributeName="r" values="3;6;3" dur="2s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="100" cy="100" r="2" fill="#fff" />
+
+        {/* Global office blips */}
+        {globalOffices.map((office, i) => (
+          <g key={i}>
+            {/* Ping animation */}
+            <motion.circle
+              cx={office.x}
+              cy={office.y}
+              r="8"
+              fill="none"
+              stroke={color}
+              strokeWidth="1"
+              initial={{ r: 4, opacity: 0.8 }}
+              animate={{ r: 15, opacity: 0 }}
+              transition={{ duration: 2, repeat: Infinity, delay: office.delay }}
+            />
+            {/* Blip point */}
+            <motion.circle
+              cx={office.x}
+              cy={office.y}
+              r="4"
+              fill={office.label === 'Bangladesh' ? '#00ff88' : color}
+              initial={{ opacity: 0.5 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity, delay: office.delay }}
+              style={{ filter: `drop-shadow(0 0 8px ${office.label === 'Bangladesh' ? '#00ff88' : color})` }}
+            />
+          </g>
         ))}
       </svg>
     </div>
@@ -286,29 +329,36 @@ function ProgressDial({ value, label, color, icon }) {
 export default function CyberpunkCommandCenter() {
   const [activeAlert, setActiveAlert] = useState(null);
 
+  // Real Brain Station 23 project alerts and milestones
   const alerts = [
-    'Project CityTouch: 99.9% uptime maintained',
-    'New deployment: Shwapno v3.2.1 successful',
-    'Security scan complete: 0 vulnerabilities',
-    'Performance optimization: +23% improvement',
+    'CityTouch Digital Banking: 446K+ users | $3B+ transactions',
+    'Shwapno E-commerce: Enterprise-scale microservice platform LIVE',
+    'ISO 27001 Certified: Security compliance verified globally',
+    'CMMI Level 3: Process maturity excellence achieved',
+    'AI/ML Division: 10X faster software delivery enabled',
+    'Global Expansion: 6 offices across 5 continents operational',
   ];
 
+  // Real operational metrics and updates
   const streamMessages = [
-    'Syncing project database...',
-    'Client satisfaction: 95%',
-    'Active deployments: 47',
-    'Code commits today: 234',
-    'Tests passing: 99.8%',
-    'Server health: Optimal',
-    'API response: 45ms avg',
-    'Memory usage: 62%',
+    'Fintech: City Bank, AB Bank, HSBC integrations active',
+    'Pharma solutions deployed across Bangladesh',
+    'Moodle LMS: Enterprise training platforms live',
+    'AWS Partner Network: Cloud migrations in progress',
+    'Microsoft Gold Partner: Enterprise solutions deployed',
+    'Salesforce implementations: CRM excellence',
+    'Client satisfaction rate: 95%+',
+    'Projects delivered: 2500+ worldwide',
+    'Google Cloud Partner: AI/ML workloads scaling',
+    'Odoo ERP: Financial services deployment complete',
   ];
 
+  // Brain Station 23 capability metrics
   const systemStats = [
-    { label: 'CPU Load', value: 67, color: '#00d4ff', icon: '⚡' },
-    { label: 'Memory', value: 82, color: '#00ff88', icon: '💾' },
-    { label: 'Network', value: 94, color: '#9333ea', icon: '📡' },
-    { label: 'Security', value: 100, color: '#ffd700', icon: '🛡️' },
+    { label: 'Delivery Rate', value: 99, color: '#00d4ff', icon: '🚀' },
+    { label: 'Client Retention', value: 85, color: '#00ff88', icon: '🔄' },
+    { label: 'Global Reach', value: 94, color: '#9333ea', icon: '🌍' },
+    { label: 'Security Score', value: 100, color: '#ffd700', icon: '🛡️' },
   ];
 
   useEffect(() => {
@@ -375,17 +425,17 @@ export default function CyberpunkCommandCenter() {
       <div className="command-grid">
         {/* Left Panel - Radar & Status */}
         <div className="command-panel panel-left">
-          <HoloScreen title="THREAT MONITOR" color="#00d4ff" delay={0}>
+          <HoloScreen title="GLOBAL PRESENCE RADAR" color="#00d4ff" delay={0}>
             <div className="radar-wrapper">
               <RadarPulse size={180} color="#00d4ff" />
               <div className="radar-stats">
                 <div className="radar-stat">
-                  <span className="stat-label">THREATS</span>
-                  <span className="stat-value safe">0</span>
+                  <span className="stat-label">OFFICES</span>
+                  <span className="stat-value safe">6</span>
                 </div>
                 <div className="radar-stat">
-                  <span className="stat-label">SCANNED</span>
-                  <span className="stat-value">2.4K</span>
+                  <span className="stat-label">COUNTRIES</span>
+                  <span className="stat-value">30+</span>
                 </div>
               </div>
             </div>
@@ -417,13 +467,13 @@ export default function CyberpunkCommandCenter() {
 
         {/* Right Panel - Metrics */}
         <div className="command-panel panel-right">
-          <HoloScreen title="PROJECT METRICS" color="#ff6b35" delay={0.3}>
+          <HoloScreen title="BS23 METRICS" color="#ff6b35" delay={0.3}>
             <div className="metrics-list">
               {[
-                { label: 'Active Projects', value: '127', trend: '+12%', up: true },
-                { label: 'Team Members', value: '850+', trend: '+5%', up: true },
-                { label: 'Deployments/Day', value: '34', trend: '+8%', up: true },
-                { label: 'Bug Resolution', value: '4.2h', trend: '-15%', up: true },
+                { label: 'Total Projects', value: '2500+', trend: '+15%', up: true },
+                { label: 'Tech Professionals', value: '889', trend: '+8%', up: true },
+                { label: 'Industries Served', value: '130+', trend: '+12%', up: true },
+                { label: 'Years of Excellence', value: '19+', trend: 'Since 2006', up: true },
               ].map((metric, i) => (
                 <motion.div
                   key={metric.label}
@@ -445,12 +495,15 @@ export default function CyberpunkCommandCenter() {
             </div>
           </HoloScreen>
 
-          <HoloScreen title="GLOBAL STATUS" color="#3b82f6" delay={0.4}>
+          <HoloScreen title="GLOBAL OFFICES" color="#3b82f6" delay={0.4}>
             <div className="status-grid">
               {[
-                { region: 'ASIA', status: 'ONLINE', latency: '12ms' },
-                { region: 'EUROPE', status: 'ONLINE', latency: '45ms' },
-                { region: 'AMERICAS', status: 'ONLINE', latency: '38ms' },
+                { region: 'BANGLADESH (HQ)', status: 'ONLINE', latency: 'Dhaka' },
+                { region: 'USA', status: 'ONLINE', latency: 'Virginia' },
+                { region: 'GERMANY', status: 'ONLINE', latency: 'Bad Zwischenahn' },
+                { region: 'MALAYSIA', status: 'ONLINE', latency: 'Kuala Lumpur' },
+                { region: 'UAE', status: 'ONLINE', latency: 'Dubai' },
+                { region: 'JAPAN', status: 'ONLINE', latency: 'Tokyo' },
               ].map((region, i) => (
                 <div key={region.region} className="status-row">
                   <span className="region-name">{region.region}</span>

@@ -10,6 +10,7 @@ import Solutions from './pages/Solutions';
 import Clients from './pages/Clients';
 import Innovation from './pages/Innovation';
 import Analytics from './pages/Analytics';
+import SolutionBuilder from './pages/SolutionBuilder';
 import Contact from './pages/Contact';
 
 // Styles
@@ -374,6 +375,7 @@ function Navigation({ theme, toggleTheme }) {
     { path: '/clients', label: 'Clients' },
     { path: '/innovation', label: 'Innovation' },
     { path: '/analytics', label: 'Analytics' },
+    { path: '/solution-builder', label: 'Architect' },
     { path: '/contact', label: 'Contact' },
   ];
 
@@ -552,6 +554,7 @@ function AnimatedRoutes() {
         <Route path="/clients" element={<PageWrapper><Clients /></PageWrapper>} />
         <Route path="/innovation" element={<PageWrapper><Innovation /></PageWrapper>} />
         <Route path="/analytics" element={<PageWrapper><Analytics /></PageWrapper>} />
+        <Route path="/solution-builder" element={<PageWrapper><SolutionBuilder /></PageWrapper>} />
         <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
       </Routes>
     </AnimatePresence>

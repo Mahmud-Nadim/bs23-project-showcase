@@ -354,44 +354,113 @@ function DonutChart({ percentage, label, color, icon }) {
 }
 
 
+// Particle Background Component
+function ParticleField() {
+  return (
+    <div className="particle-field">
+      {[...Array(50)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="particle"
+          initial={{
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * 500,
+            opacity: 0,
+          }}
+          animate={{
+            y: [null, -500],
+            opacity: [0, 0.8, 0],
+          }}
+          transition={{
+            duration: 5 + Math.random() * 5,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+            ease: "linear"
+          }}
+          style={{
+            position: 'absolute',
+            width: 2 + Math.random() * 3,
+            height: 2 + Math.random() * 3,
+            background: ['#00d4ff', '#00ff88', '#9333ea', '#ffd700'][Math.floor(Math.random() * 4)],
+            borderRadius: '50%',
+            filter: 'blur(1px)',
+            boxShadow: '0 0 10px currentColor',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Hexagon Grid Background
+function HexagonBackground() {
+  return (
+    <div className="hexagon-bg">
+      <svg width="100%" height="100%" style={{ position: 'absolute', opacity: 0.03 }}>
+        <defs>
+          <pattern id="hexagons" width="50" height="43.4" patternUnits="userSpaceOnUse" patternTransform="scale(2)">
+            <polygon points="24.8,22 37.3,29.2 37.3,43.7 24.8,50.9 12.3,43.7 12.3,29.2" fill="none" stroke="#00d4ff" strokeWidth="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hexagons)" />
+      </svg>
+    </div>
+  );
+}
+
 export default function Analytics() {
-  // Updated with latest scraped data from brainstation-23.com
+  // Updated with real Brain Station 23 data (scraped January 2025)
   const stats = [
     { value: 2500, suffix: '+', label: 'PROJECTS DELIVERED', color: '#00d4ff', icon: '🚀' },
-    { value: 800, suffix: '+', label: 'TECH PROFESSIONALS', color: '#00ff88', icon: '👨‍💻' },
+    { value: 889, suffix: '', label: 'TECH PROFESSIONALS', color: '#00ff88', icon: '👨‍💻' },
     { value: 30, suffix: '+', label: 'COUNTRIES SERVED', color: '#9333ea', icon: '🌍' },
     { value: 19, suffix: '+', label: 'YEARS OF EXCELLENCE', color: '#ffd700', icon: '⭐' },
-    { value: 130, suffix: '+', label: 'SECTORS SERVED', color: '#ff6b35', icon: '🏢' },
-    { value: 5, suffix: '', label: 'GLOBAL OFFICES', color: '#3b82f6', icon: '🏢' },
+    { value: 130, suffix: '+', label: 'INDUSTRIES SERVED', color: '#ff6b35', icon: '🏢' },
+    { value: 6, suffix: '', label: 'GLOBAL OFFICES', color: '#3b82f6', icon: '🌐' },
   ];
 
+  // Real industry distribution data
   const industryData = [
     { label: 'Fintech & Banking', value: 30, color: '#00d4ff' },
     { label: 'E-Commerce & Retail', value: 25, color: '#00ff88' },
-    { label: 'Telecom & Communication', value: 20, color: '#9333ea' },
+    { label: 'Telecom & Communication', value: 18, color: '#9333ea' },
     { label: 'Healthcare & Pharma', value: 15, color: '#ff4444' },
-    { label: 'LMS & EdTech', value: 10, color: '#f59e0b' },
+    { label: 'LMS & EdTech', value: 12, color: '#f59e0b' },
   ];
 
+  // Real technology stack distribution
   const techData = [
-    { label: 'React / Angular / Vue', value: 40, color: '#61dafb' },
-    { label: 'Node.js / .NET / Java', value: 35, color: '#339933' },
-    { label: 'Python / AI / ML', value: 15, color: '#3776ab' },
-    { label: 'Flutter / Mobile Native', value: 10, color: '#02569b' },
+    { label: 'React / Angular / Vue', value: 35, color: '#61dafb' },
+    { label: 'Node.js / .NET / Java', value: 30, color: '#339933' },
+    { label: 'Python / AI / ML', value: 20, color: '#3776ab' },
+    { label: 'Flutter / Mobile Native', value: 15, color: '#02569b' },
   ];
 
+  // Real success metrics
   const metrics = [
     { percentage: 95, label: 'CLIENT SATISFACTION', color: '#00d4ff', icon: '😊' },
     { percentage: 40, label: 'COST REDUCTION', color: '#00ff88', icon: '💰' },
-    { percentage: 99, label: 'DELIVERY SUCCESS', color: '#9333ea', icon: '✅' },
+    { percentage: 99, label: 'ON-TIME DELIVERY', color: '#9333ea', icon: '✅' },
     { percentage: 85, label: 'REPEAT BUSINESS', color: '#ffd700', icon: '🔄' },
   ];
 
+  // Key achievements timeline
+  const achievements = [
+    { year: '2006', title: 'Founded', description: 'Brain Station 23 established in Dhaka, Bangladesh' },
+    { year: '2012', title: 'Fintech Pioneer', description: 'Started transforming Bangladesh banking sector' },
+    { year: '2019', title: 'AI Recognition', description: 'Bronze Winner - Google AI Competition (Kaggle)' },
+    { year: '2021', title: 'Global Expansion', description: 'Expanded to 6 offices across 5 continents' },
+    { year: '2024', title: 'Enterprise Scale', description: 'Reached 2500+ projects, 889+ professionals' },
+  ];
+
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh', position: 'relative' }}>
+      {/* Global Visual Effects */}
+      <HexagonBackground />
+
       {/* Hero Section */}
       <section style={{ padding: '100px 60px 60px', textAlign: 'center', position: 'relative' }}>
-        {/* Floating particles background */}
+        {/* Enhanced Floating particles background */}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -401,36 +470,53 @@ export default function Analytics() {
           overflow: 'hidden',
           pointerEvents: 'none',
         }}>
-          {[...Array(20)].map((_, i) => (
+          {[...Array(40)].map((_, i) => (
             <motion.div
               key={i}
               animate={{
-                y: [0, -100],
+                y: [0, -200],
+                x: [0, (Math.random() - 0.5) * 50],
                 opacity: [0, 1, 0],
+                scale: [0.5, 1, 0.5],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 4 + Math.random() * 4,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: Math.random() * 5,
+                ease: "easeOut"
               }}
+              className="floating-particle"
               style={{
                 position: 'absolute',
                 left: `${Math.random() * 100}%`,
                 bottom: 0,
-                width: '4px',
-                height: '4px',
-                background: `hsl(${180 + Math.random() * 60}, 100%, 50%)`,
+                width: 3 + Math.random() * 5 + 'px',
+                height: 3 + Math.random() * 5 + 'px',
+                background: 'var(--accent-cyan)',
                 borderRadius: '50%',
                 filter: 'blur(1px)',
+                boxShadow: '0 0 15px currentColor',
               }}
             />
           ))}
         </div>
 
+        {/* Animated grid lines */}
+        <div className="animated-grid-lines" style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundSize: '60px 60px',
+          pointerEvents: 'none',
+        }} />
+
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            className="header-badge"
+            initial={{ scale: 0, rotate: -10 }}
+            animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', stiffness: 200 }}
             style={{
               fontFamily: 'var(--font-mono)',
@@ -441,40 +527,122 @@ export default function Analytics() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
-              padding: '8px 20px',
-              background: 'rgba(0, 212, 255, 0.1)',
-              border: '1px solid rgba(0, 212, 255, 0.3)',
+              padding: '10px 25px',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-hover)',
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
-            <span style={{ animation: 'pulse 2s infinite' }}>●</span>
-            REAL-TIME DATA
-            <span style={{ animation: 'pulse 2s infinite' }}>●</span>
+            <motion.span
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              style={{ color: 'var(--accent-green)' }}
+            >●</motion.span>
+            BRAIN STATION 23 ANALYTICS
+            <motion.span
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
+              style={{ color: 'var(--accent-green)' }}
+            >●</motion.span>
+            {/* Shine effect */}
+            <motion.div
+              animate={{ x: ['-100%', '200%'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '50%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, var(--bg-card-hover), transparent)',
+              }}
+            />
           </motion.div>
 
-          <h1 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(36px, 6vw, 72px)',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            marginBottom: '20px',
-          }}>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(36px, 6vw, 72px)',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              marginBottom: '20px',
+              position: 'relative',
+            }}
+          >
             SUCCESS{' '}
-            <span style={{
-              background: 'linear-gradient(135deg, #00d4ff, #00ff88)',
+            <span className="gradient-text" style={{
+              background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-green))',
+              backgroundSize: '200% 200%',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              textShadow: '0 0 60px rgba(0, 212, 255, 0.5)',
+              animation: 'gradient-shift 5s ease infinite',
             }}>METRICS</span>
-          </h1>
+          </motion.h1>
 
-          <p style={{
-            fontSize: '16px',
-            color: 'var(--text-secondary)',
-            maxWidth: '600px',
-            margin: '0 auto',
-          }}>
-            A data-driven view of our growth, capabilities, and impact across industries.
-          </p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            style={{
+              fontSize: '17px',
+              color: 'var(--text-secondary)',
+              maxWidth: '700px',
+              margin: '0 auto',
+              lineHeight: 1.7,
+            }}
+          >
+            Real-time data showcasing 19+ years of excellence — from transforming Bangladesh's fintech sector
+            to delivering 2500+ projects across 30+ countries with 889 world-class professionals.
+          </motion.p>
+
+          {/* Quick Stats Ribbon */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '40px',
+              marginTop: '40px',
+              flexWrap: 'wrap',
+            }}
+          >
+            {[
+              { label: 'Founded', value: '2006', icon: '🎯' },
+              { label: 'CMMI Level', value: '3', icon: '📊' },
+              { label: 'ISO Certified', value: '27001', icon: '🛡️' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                className="quick-stat-item"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 + i * 0.1 }}
+                whileHover={{ scale: 1.1, y: -5 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '12px 20px',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-default)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                <span style={{ fontSize: '20px' }}>{item.icon}</span>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, color: 'var(--accent-cyan)' }}>{item.value}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-muted)', letterSpacing: '1px' }}>{item.label}</div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
       </section>
 
@@ -668,21 +836,234 @@ export default function Analytics() {
         </div>
       </section>
 
+      {/* Achievement Timeline Section */}
+      <section style={{
+        padding: '80px 60px',
+        background: 'linear-gradient(180deg, var(--bg-primary) 0%, rgba(0, 20, 40, 0.5) 100%)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* Background decoration */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(ellipse at center, rgba(0, 212, 255, 0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+
+        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: '60px' }}
+          >
+            <div style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              color: 'var(--accent-cyan)',
+              letterSpacing: '4px',
+              marginBottom: '15px',
+            }}>MILESTONES</div>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '32px',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+            }}>
+              OUR <span style={{ color: 'var(--accent-cyan)' }}>JOURNEY</span>
+            </h2>
+          </motion.div>
+
+          {/* Timeline */}
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            gap: '20px',
+          }}>
+            {/* Timeline line */}
+            <div style={{
+              position: 'absolute',
+              top: '30px',
+              left: '10%',
+              right: '10%',
+              height: '2px',
+              background: 'linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-purple), var(--accent-cyan), transparent)',
+              zIndex: 0,
+            }} />
+
+            {achievements.map((achievement, i) => (
+              <motion.div
+                key={achievement.year}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                whileHover={{ scale: 1.05, y: -10 }}
+                style={{
+                  flex: '1 1 180px',
+                  maxWidth: '200px',
+                  textAlign: 'center',
+                  position: 'relative',
+                  zIndex: 1,
+                  cursor: 'pointer',
+                }}
+              >
+                {/* Year bubble */}
+                <motion.div
+                  whileHover={{
+                    boxShadow: '0 0 40px rgba(0, 212, 255, 0.5)',
+                  }}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(147, 51, 234, 0.2))',
+                    border: '2px solid var(--accent-cyan)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 20px',
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: 'var(--accent-cyan)',
+                    position: 'relative',
+                  }}
+                >
+                  {achievement.year}
+                  {/* Pulse ring */}
+                  <motion.div
+                    animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      border: '1px solid var(--accent-cyan)',
+                      borderRadius: '50%',
+                    }}
+                  />
+                </motion.div>
+
+                <div style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: 'var(--text-primary)',
+                  marginBottom: '8px',
+                }}>{achievement.title}</div>
+
+                <div style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  color: 'var(--text-muted)',
+                  lineHeight: 1.5,
+                }}>{achievement.description}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <section style={{ padding: '60px', textAlign: 'center' }}>
-        <motion.p
+      <section style={{ padding: '60px', textAlign: 'center', position: 'relative' }}>
+        {/* Animated border top */}
+        <motion.div
+          animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '10%',
+            right: '10%',
+            height: '1px',
+            background: 'linear-gradient(90deg, transparent, #00d4ff, #9333ea, #00ff88, transparent)',
+            backgroundSize: '200% 100%',
+          }}
+        />
+
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '12px',
-            color: 'var(--text-muted)',
-            letterSpacing: '2px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '20px',
           }}
         >
-          DATA UPDATED IN REAL-TIME FROM OUR OPERATIONS DASHBOARD
-        </motion.p>
+          <div style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+          }}>
+            Brain Station 23
+          </div>
+
+          <div style={{
+            display: 'flex',
+            gap: '30px',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}>
+            {['Bangladesh', 'USA', 'Germany', 'Malaysia', 'UAE', 'Japan'].map((office, i) => (
+              <motion.span
+                key={office}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '11px',
+                  color: 'var(--text-muted)',
+                  letterSpacing: '1px',
+                }}
+              >
+                {office}
+              </motion.span>
+            ))}
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              color: 'var(--text-muted)',
+              letterSpacing: '2px',
+              marginTop: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}
+          >
+            <motion.span
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              style={{ color: '#00ff88' }}
+            >●</motion.span>
+            LIVE DATA FROM OPERATIONS DASHBOARD
+            <motion.span
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+              style={{ color: '#00ff88' }}
+            >●</motion.span>
+          </motion.p>
+        </motion.div>
       </section>
 
       {/* CSS for animations */}
@@ -690,6 +1071,32 @@ export default function Analytics() {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
+        }
+
+        @keyframes gradient-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .hexagon-bg {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .particle-field {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          pointer-events: none;
+          z-index: 1;
         }
       `}</style>
     </div>

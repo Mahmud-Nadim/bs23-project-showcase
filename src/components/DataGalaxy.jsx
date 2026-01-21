@@ -1,18 +1,247 @@
 import React, { useState, useRef, useMemo, useEffect, Suspense } from 'react';
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
-import { Sparkles, Float, OrbitControls, Stars, shaderMaterial } from '@react-three/drei';
+import { Sparkles, Float, OrbitControls, Stars, Text, Html } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 
-// Data for cosmic bodies
+// Enhanced cosmic data with Brain Station 23 infographics
 const cosmicData = [
-  { id: 1, label: '2500+', name: 'Projects', color: '#00d4ff', size: 1.4, distance: 6, speed: 0.15, description: 'Delivered Worldwide' },
-  { id: 2, label: '850+', name: 'Engineers', color: '#00ff88', size: 1.2, distance: 8, speed: 0.12, description: 'Tech Professionals' },
-  { id: 3, label: '30+', name: 'Countries', color: '#9333ea', size: 1.0, distance: 10, speed: 0.1, description: 'Global Presence' },
-  { id: 4, label: '19+', name: 'Years', color: '#ffd700', size: 1.3, distance: 4.5, speed: 0.2, description: 'Of Excellence' },
-  { id: 5, label: '95%', name: 'Satisfaction', color: '#ff6b35', size: 1.1, distance: 12, speed: 0.08, description: 'Client Happiness' },
-  { id: 6, label: '99.9%', name: 'Uptime', color: '#ff4488', size: 0.9, distance: 14, speed: 0.06, description: 'System Reliability' },
+  {
+    id: 1,
+    label: '2500+',
+    name: 'Projects',
+    color: '#00d4ff',
+    size: 1.4,
+    distance: 6,
+    speed: 0.15,
+    description: 'Delivered Worldwide',
+    infographics: {
+      title: 'Project Excellence',
+      stats: [
+        { label: 'Fintech Projects', value: '500+', icon: '🏦' },
+        { label: 'E-Commerce', value: '400+', icon: '🛒' },
+        { label: 'Healthcare', value: '300+', icon: '🏥' },
+        { label: 'Enterprise', value: '600+', icon: '🏢' },
+      ],
+      highlight: 'CityTouch: 446K+ users, $3B+ transactions',
+      partners: ['City Bank', 'AB Bank', 'HSBC', 'Shwapno'],
+    }
+  },
+  {
+    id: 2,
+    label: '889',
+    name: 'Engineers',
+    color: '#00ff88',
+    size: 1.2,
+    distance: 8,
+    speed: 0.12,
+    description: 'Tech Professionals',
+    infographics: {
+      title: 'World-Class Team',
+      stats: [
+        { label: 'Full Stack Devs', value: '350+', icon: '💻' },
+        { label: 'AI/ML Engineers', value: '80+', icon: '🤖' },
+        { label: 'Cloud Architects', value: '60+', icon: '☁️' },
+        { label: 'QA Engineers', value: '120+', icon: '🔍' },
+      ],
+      highlight: 'Talent powering Fortune 100 solutions',
+      partners: ['AWS', 'Microsoft', 'Google Cloud'],
+    }
+  },
+  {
+    id: 3,
+    label: '30+',
+    name: 'Countries',
+    color: '#9333ea',
+    size: 1.0,
+    distance: 10,
+    speed: 0.1,
+    description: 'Global Presence',
+    infographics: {
+      title: 'Worldwide Impact',
+      stats: [
+        { label: 'Asia Pacific', value: '15+', icon: '🌏' },
+        { label: 'Europe', value: '8+', icon: '🌍' },
+        { label: 'Americas', value: '5+', icon: '🌎' },
+        { label: 'Middle East', value: '4+', icon: '🏜️' },
+      ],
+      highlight: '6 Global Offices: Bangladesh, USA, Germany, Malaysia, UAE, Japan',
+      partners: ['Salesforce', 'Odoo', 'Moodle'],
+    }
+  },
+  {
+    id: 4,
+    label: '19+',
+    name: 'Years',
+    color: '#ffd700',
+    size: 1.3,
+    distance: 4.5,
+    speed: 0.2,
+    description: 'Of Excellence',
+    infographics: {
+      title: 'Legacy of Innovation',
+      stats: [
+        { label: 'Founded', value: '2006', icon: '🎯' },
+        { label: 'CMMI Level', value: '3', icon: '📊' },
+        { label: 'ISO Certs', value: '2', icon: '🏆' },
+        { label: 'BASIS Awards', value: '10+', icon: '🥇' },
+      ],
+      highlight: 'Bronze Winner - Google AI Competition (Kaggle) 2019',
+      partners: ['ISO 27001', 'ISO 9001', 'CMMI Level 3'],
+    }
+  },
+  {
+    id: 5,
+    label: '95%',
+    name: 'Satisfaction',
+    color: '#ff6b35',
+    size: 1.1,
+    distance: 12,
+    speed: 0.08,
+    description: 'Client Happiness',
+    infographics: {
+      title: 'Client Success',
+      stats: [
+        { label: 'Repeat Business', value: '85%', icon: '🔄' },
+        { label: 'On-Time Delivery', value: '99%', icon: '⏰' },
+        { label: 'Support Rating', value: '4.9/5', icon: '⭐' },
+        { label: 'NPS Score', value: '72+', icon: '📈' },
+      ],
+      highlight: 'Clutch-rated Top Software Development Company',
+      partners: ['Clutch', 'Forbes', 'Inc. 5000'],
+    }
+  },
+  {
+    id: 6,
+    label: '130+',
+    name: 'Industries',
+    color: '#ff4488',
+    size: 0.9,
+    distance: 14,
+    speed: 0.06,
+    description: 'Sectors Served',
+    infographics: {
+      title: 'Industry Expertise',
+      stats: [
+        { label: 'Fintech', value: '25%', icon: '💳' },
+        { label: 'Healthcare', value: '20%', icon: '🏥' },
+        { label: 'E-Commerce', value: '22%', icon: '🛍️' },
+        { label: 'Telecom', value: '15%', icon: '📱' },
+      ],
+      highlight: 'Transforming Bangladesh\'s banking sector since 2012',
+      partners: ['Metlife', 'UCBL', 'Southeast Bank'],
+    }
+  },
 ];
+
+// Massive Star Component for zoomed view
+function MassiveStar({ data, isZoomed }) {
+  const starRef = useRef();
+  const coronaRef = useRef();
+  const flareRef = useRef();
+
+  useFrame((state) => {
+    const time = state.clock.elapsedTime;
+
+    if (starRef.current) {
+      starRef.current.rotation.y = time * 0.2;
+      starRef.current.rotation.z = time * 0.1;
+    }
+
+    if (coronaRef.current) {
+      const pulse = 1 + Math.sin(time * 3) * 0.1;
+      coronaRef.current.scale.setScalar(pulse);
+    }
+
+    if (flareRef.current) {
+      flareRef.current.rotation.z = time * 0.5;
+    }
+  });
+
+  if (!isZoomed) return null;
+
+  return (
+    <group>
+      {/* Massive star core */}
+      <mesh ref={starRef}>
+        <icosahedronGeometry args={[4, 6]} />
+        <meshStandardMaterial
+          color={data.color}
+          emissive={data.color}
+          emissiveIntensity={3}
+          roughness={0.1}
+          metalness={0.9}
+        />
+      </mesh>
+
+      {/* Inner corona */}
+      <mesh ref={coronaRef}>
+        <sphereGeometry args={[5, 64, 64]} />
+        <meshBasicMaterial
+          color={data.color}
+          transparent
+          opacity={0.4}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Outer glow layers */}
+      {[6, 7, 8, 10].map((radius, i) => (
+        <mesh key={i}>
+          <sphereGeometry args={[radius, 32, 32]} />
+          <meshBasicMaterial
+            color={data.color}
+            transparent
+            opacity={0.15 - i * 0.03}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
+
+      {/* Solar flares */}
+      <group ref={flareRef}>
+        {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+          <mesh
+            key={i}
+            rotation={[0, 0, (angle * Math.PI) / 180]}
+            position={[0, 0, 0]}
+          >
+            <coneGeometry args={[0.5, 8, 8]} />
+            <meshBasicMaterial
+              color={data.color}
+              transparent
+              opacity={0.3}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Massive sparkle field */}
+      <Sparkles
+        count={500}
+        scale={20}
+        size={6}
+        speed={0.8}
+        color={data.color}
+      />
+
+      {/* Energy rings */}
+      {[6, 8, 10, 12].map((radius, i) => (
+        <mesh key={i} rotation={[Math.PI / 2 + i * 0.2, 0, 0]}>
+          <torusGeometry args={[radius, 0.03, 16, 100]} />
+          <meshBasicMaterial
+            color={data.color}
+            transparent
+            opacity={0.5 - i * 0.1}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
 
 // Nebula Cloud Component
 function NebulaCloud({ color, position, scale = 1 }) {
@@ -45,13 +274,14 @@ function NebulaCloud({ color, position, scale = 1 }) {
 }
 
 // Central Black Hole / Sun
-function CosmicCore({ activeData }) {
+function CosmicCore({ activeData, isZoomed }) {
   const coreRef = useRef();
   const ringRef = useRef();
   const glowRef = useRef();
   const accretionRef = useRef();
 
   const activeColor = activeData ? activeData.color : '#00d4ff';
+  const coreScale = isZoomed ? 0 : 1;
 
   useFrame((state) => {
     const time = state.clock.elapsedTime;
@@ -71,12 +301,12 @@ function CosmicCore({ activeData }) {
 
     if (glowRef.current) {
       const pulse = 1 + Math.sin(time * 2) * 0.1;
-      glowRef.current.scale.setScalar(pulse);
+      glowRef.current.scale.setScalar(pulse * coreScale);
     }
   });
 
   return (
-    <group>
+    <group scale={coreScale}>
       {/* Core sphere */}
       <mesh ref={coreRef}>
         <icosahedronGeometry args={[1.5, 4]} />
@@ -145,23 +375,29 @@ function CosmicCore({ activeData }) {
 }
 
 // Orbiting Planet/Star
-function CosmicBody({ data, index, isActive, onHover, onLeave, onClick }) {
+function CosmicBody({ data, index, isActive, onHover, onLeave, onClick, isZoomed, zoomedData }) {
   const groupRef = useRef();
   const bodyRef = useRef();
   const glowRef = useRef();
   const ringRef = useRef();
   const angle = useRef(index * (Math.PI * 2 / cosmicData.length) + Math.random() * 0.5);
 
+  const isThisZoomed = isZoomed && zoomedData?.id === data.id;
+  const shouldHide = isZoomed && !isThisZoomed;
+
   useFrame((state) => {
     const time = state.clock.elapsedTime;
-    angle.current += data.speed * 0.01;
 
-    const x = Math.cos(angle.current) * data.distance;
-    const z = Math.sin(angle.current) * data.distance;
-    const y = Math.sin(angle.current * 2 + index) * 1.5;
+    if (!isZoomed) {
+      angle.current += data.speed * 0.01;
 
-    if (groupRef.current) {
-      groupRef.current.position.set(x, y, z);
+      const x = Math.cos(angle.current) * data.distance;
+      const z = Math.sin(angle.current) * data.distance;
+      const y = Math.sin(angle.current * 2 + index) * 1.5;
+
+      if (groupRef.current) {
+        groupRef.current.position.set(x, y, z);
+      }
     }
 
     if (bodyRef.current) {
@@ -180,13 +416,10 @@ function CosmicBody({ data, index, isActive, onHover, onLeave, onClick }) {
     }
   });
 
+  if (shouldHide) return null;
+
   return (
     <group ref={groupRef}>
-      {/* Orbit trail */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -groupRef.current?.position.y || 0, 0]}>
-        {/* Orbit path is rendered separately */}
-      </mesh>
-
       <Float speed={2} rotationIntensity={0.2} floatIntensity={0.5}>
         <group
           onPointerEnter={(e) => { e.stopPropagation(); onHover(); }}
@@ -240,7 +473,9 @@ function CosmicBody({ data, index, isActive, onHover, onLeave, onClick }) {
 }
 
 // Orbit Paths
-function OrbitPaths({ activeId }) {
+function OrbitPaths({ activeId, isZoomed }) {
+  if (isZoomed) return null;
+
   return (
     <group rotation={[Math.PI / 2, 0, 0]}>
       {cosmicData.map((data) => (
@@ -387,21 +622,28 @@ function CosmicDust() {
   );
 }
 
-// Camera Animation
-function CameraRig({ activeData }) {
+// Camera Animation with zoom support
+function CameraRig({ activeData, isZoomed, zoomedData }) {
   const { camera } = useThree();
+  const targetPosition = useRef(new THREE.Vector3(0, 8, 25));
 
   useFrame((state) => {
     const time = state.clock.elapsedTime;
 
-    // Gentle camera movement
-    const targetX = Math.sin(time * 0.1) * 2;
-    const targetY = 8 + Math.sin(time * 0.15) * 2;
-    const targetZ = 25 + Math.sin(time * 0.08) * 3;
+    if (isZoomed && zoomedData) {
+      // Zoom in close to the star
+      targetPosition.current.set(0, 2, 12);
+    } else {
+      // Normal orbiting view
+      const targetX = Math.sin(time * 0.1) * 2;
+      const targetY = 8 + Math.sin(time * 0.15) * 2;
+      const targetZ = 25 + Math.sin(time * 0.08) * 3;
+      targetPosition.current.set(targetX, targetY, targetZ);
+    }
 
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.01);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.01);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.01);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetPosition.current.x, 0.02);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetPosition.current.y, 0.02);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetPosition.current.z, 0.02);
 
     camera.lookAt(0, 0, 0);
   });
@@ -410,14 +652,27 @@ function CameraRig({ activeData }) {
 }
 
 // Main Scene
-function CosmicScene({ activeId, setActiveId, setActiveData }) {
+function CosmicScene({ activeId, setActiveId, setActiveData, isZoomed, setIsZoomed, zoomedData, setZoomedData }) {
   const activeData = cosmicData.find(d => d.id === activeId);
+
+  const handleBodyClick = (data) => {
+    if (isZoomed && zoomedData?.id === data.id) {
+      // Zoom out
+      setIsZoomed(false);
+      setZoomedData(null);
+    } else {
+      // Zoom in
+      setIsZoomed(true);
+      setZoomedData(data);
+      setActiveData(data);
+    }
+  };
 
   return (
     <>
       {/* Lighting */}
       <ambientLight intensity={0.1} />
-      <pointLight position={[0, 0, 0]} intensity={3} color="#00d4ff" distance={50} />
+      <pointLight position={[0, 0, 0]} intensity={isZoomed ? 5 : 3} color={zoomedData?.color || "#00d4ff"} distance={50} />
       <pointLight position={[20, 10, 20]} intensity={0.5} color="#ff6b35" />
       <pointLight position={[-20, -10, -20]} intensity={0.5} color="#9333ea" />
 
@@ -444,10 +699,13 @@ function CosmicScene({ activeId, setActiveId, setActiveData }) {
       <ShootingStars />
 
       {/* Orbit paths */}
-      <OrbitPaths activeId={activeId} />
+      <OrbitPaths activeId={activeId} isZoomed={isZoomed} />
 
-      {/* Central core */}
-      <CosmicCore activeData={activeData} />
+      {/* Central core (hidden when zoomed) */}
+      <CosmicCore activeData={activeData} isZoomed={isZoomed} />
+
+      {/* Massive star when zoomed */}
+      {zoomedData && <MassiveStar data={zoomedData} isZoomed={isZoomed} />}
 
       {/* Orbiting bodies */}
       {cosmicData.map((data, index) => (
@@ -456,39 +714,138 @@ function CosmicScene({ activeId, setActiveId, setActiveData }) {
           data={data}
           index={index}
           isActive={activeId === data.id}
+          isZoomed={isZoomed}
+          zoomedData={zoomedData}
           onHover={() => {
-            setActiveId(data.id);
-            setActiveData(data);
+            if (!isZoomed) {
+              setActiveId(data.id);
+              setActiveData(data);
+            }
           }}
           onLeave={() => {
-            setActiveId(null);
-            setActiveData(null);
+            if (!isZoomed) {
+              setActiveId(null);
+              setActiveData(null);
+            }
           }}
-          onClick={() => {
-            setActiveData(data);
-          }}
+          onClick={() => handleBodyClick(data)}
         />
       ))}
 
       {/* Camera animation */}
-      <CameraRig activeData={activeData} />
+      <CameraRig activeData={activeData} isZoomed={isZoomed} zoomedData={zoomedData} />
 
       {/* Orbit controls */}
       <OrbitControls
-        enableZoom={true}
+        enableZoom={!isZoomed}
         enablePan={false}
-        minDistance={15}
-        maxDistance={50}
+        minDistance={isZoomed ? 10 : 15}
+        maxDistance={isZoomed ? 20 : 50}
         maxPolarAngle={Math.PI / 1.5}
         minPolarAngle={Math.PI / 4}
-        autoRotate
+        autoRotate={!isZoomed}
         autoRotateSpeed={0.3}
       />
     </>
   );
 }
 
-// Info Card Component
+// Infographic Panel Component
+function InfographicPanel({ data, onClose }) {
+  if (!data) return null;
+
+  return (
+    <motion.div
+      className="infographic-panel"
+      initial={{ opacity: 0, x: 100, scale: 0.8 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      exit={{ opacity: 0, x: 100, scale: 0.8 }}
+      transition={{ type: 'spring', damping: 20 }}
+      style={{ '--panel-color': data.color }}
+    >
+      {/* Close button */}
+      <button className="infographic-close" onClick={onClose}>
+        <span>×</span>
+      </button>
+
+      {/* Header */}
+      <div className="infographic-header">
+        <div className="infographic-icon-large">
+          <div className="icon-glow" style={{ background: data.color }} />
+          <span className="icon-value">{data.label}</span>
+          <span className="icon-name">{data.name}</span>
+        </div>
+        <h3 className="infographic-title">{data.infographics.title}</h3>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="infographic-stats">
+        {data.infographics.stats.map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            className="infographic-stat"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + i * 0.1 }}
+          >
+            <span className="stat-icon">{stat.icon}</span>
+            <span className="stat-value" style={{ color: data.color }}>{stat.value}</span>
+            <span className="stat-label">{stat.label}</span>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Highlight */}
+      <motion.div
+        className="infographic-highlight"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        style={{ borderColor: data.color }}
+      >
+        <span className="highlight-icon">⚡</span>
+        {data.infographics.highlight}
+      </motion.div>
+
+      {/* Partners */}
+      <div className="infographic-partners">
+        <span className="partners-label">KEY PARTNERS & CERTIFICATIONS</span>
+        <div className="partners-list">
+          {data.infographics.partners.map((partner, i) => (
+            <motion.span
+              key={partner}
+              className="partner-badge"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8 + i * 0.1 }}
+              style={{ borderColor: data.color }}
+            >
+              {partner}
+            </motion.span>
+          ))}
+        </div>
+      </div>
+
+      {/* Decorative elements */}
+      <div className="infographic-decoration">
+        <svg viewBox="0 0 100 100" className="corner-svg top-left">
+          <path d="M 0 30 L 0 0 L 30 0" fill="none" stroke={data.color} strokeWidth="2" />
+        </svg>
+        <svg viewBox="0 0 100 100" className="corner-svg top-right">
+          <path d="M 70 0 L 100 0 L 100 30" fill="none" stroke={data.color} strokeWidth="2" />
+        </svg>
+        <svg viewBox="0 0 100 100" className="corner-svg bottom-left">
+          <path d="M 0 70 L 0 100 L 30 100" fill="none" stroke={data.color} strokeWidth="2" />
+        </svg>
+        <svg viewBox="0 0 100 100" className="corner-svg bottom-right">
+          <path d="M 100 70 L 100 100 L 70 100" fill="none" stroke={data.color} strokeWidth="2" />
+        </svg>
+      </div>
+    </motion.div>
+  );
+}
+
+// Info Card Component (for non-zoomed hover)
 function InfoCard({ data }) {
   if (!data) return null;
 
@@ -513,6 +870,7 @@ function InfoCard({ data }) {
         <div className="card-value" style={{ color: data.color }}>{data.label}</div>
         <div className="card-name">{data.name}</div>
         <div className="card-description">{data.description}</div>
+        <div className="card-cta">Click to explore</div>
         <div className="card-bar">
           <motion.div
             className="bar-fill"
@@ -537,6 +895,20 @@ function InfoCard({ data }) {
 export default function DataGalaxy() {
   const [activeId, setActiveId] = useState(null);
   const [activeData, setActiveData] = useState(null);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomedData, setZoomedData] = useState(null);
+
+  const handleLegendClick = (data) => {
+    if (isZoomed && zoomedData?.id === data.id) {
+      setIsZoomed(false);
+      setZoomedData(null);
+    } else {
+      setIsZoomed(true);
+      setZoomedData(data);
+      setActiveData(data);
+      setActiveId(data.id);
+    }
+  };
 
   return (
     <section className="data-galaxy-section">
@@ -571,7 +943,7 @@ export default function DataGalaxy() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          Navigate through our achievements in the data universe
+          {isZoomed ? `Exploring: ${zoomedData?.name}` : 'Navigate through our achievements in the data universe'}
         </motion.p>
       </div>
 
@@ -587,23 +959,32 @@ export default function DataGalaxy() {
               activeId={activeId}
               setActiveId={setActiveId}
               setActiveData={setActiveData}
+              isZoomed={isZoomed}
+              setIsZoomed={setIsZoomed}
+              zoomedData={zoomedData}
+              setZoomedData={setZoomedData}
             />
           </Suspense>
         </Canvas>
 
         {/* Legend */}
-        <div className="cosmic-legend">
+        <div className={`cosmic-legend ${isZoomed ? 'zoomed' : ''}`}>
           {cosmicData.map((data) => (
             <motion.div
               key={data.id}
-              className={`legend-item ${activeId === data.id ? 'active' : ''}`}
+              className={`legend-item ${activeId === data.id ? 'active' : ''} ${isZoomed && zoomedData?.id === data.id ? 'selected' : ''}`}
+              onClick={() => handleLegendClick(data)}
               onMouseEnter={() => {
-                setActiveId(data.id);
-                setActiveData(data);
+                if (!isZoomed) {
+                  setActiveId(data.id);
+                  setActiveData(data);
+                }
               }}
               onMouseLeave={() => {
-                setActiveId(null);
-                setActiveData(null);
+                if (!isZoomed) {
+                  setActiveId(null);
+                  setActiveData(null);
+                }
               }}
               whileHover={{ x: 10 }}
               style={{ '--item-color': data.color }}
@@ -618,9 +999,22 @@ export default function DataGalaxy() {
           ))}
         </div>
 
-        {/* Active Info Card */}
+        {/* Active Info Card (non-zoomed) */}
         <AnimatePresence>
-          {activeData && <InfoCard data={activeData} />}
+          {activeData && !isZoomed && <InfoCard data={activeData} />}
+        </AnimatePresence>
+
+        {/* Infographic Panel (zoomed) */}
+        <AnimatePresence>
+          {isZoomed && zoomedData && (
+            <InfographicPanel
+              data={zoomedData}
+              onClose={() => {
+                setIsZoomed(false);
+                setZoomedData(null);
+              }}
+            />
+          )}
         </AnimatePresence>
       </div>
 
@@ -633,7 +1027,7 @@ export default function DataGalaxy() {
         transition={{ delay: 1 }}
       >
         <span className="hint-icon">🌌</span>
-        DRAG TO EXPLORE | SCROLL TO ZOOM | HOVER CELESTIAL BODIES
+        {isZoomed ? 'CLICK TOPIC OR CLOSE BUTTON TO RETURN' : 'CLICK ANY CELESTIAL BODY TO ZOOM IN | HOVER TO PREVIEW'}
         <span className="hint-icon">🌌</span>
       </motion.div>
     </section>
