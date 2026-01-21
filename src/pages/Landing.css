@@ -1,7 +1,89 @@
 /* Landing Page Styles */
 
-.landing-page {
+.landing-page,
+.landing-page-epic {
   min-height: 100vh;
+  background: #000;
+}
+
+/* ============================================
+   ENHANCED CLIENTS MARQUEE
+   ============================================ */
+
+.clients-marquee-enhanced {
+  position: relative;
+  padding: 80px 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0a0a1a 0%, #000 50%, #0a0a1a 100%);
+  cursor: crosshair;
+}
+
+.marquee-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.marquee-label {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  color: #00d4ff;
+  padding: 0.5rem 1.5rem;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 50px;
+}
+
+.click-effects-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.floating-text-effect {
+  position: absolute;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  font-size: 24px;
+  font-weight: 700;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.burst-effect {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.particle-effect {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hover-sparkle {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  font-size: 12px;
+  color: #ffd700;
+}
+
+.marquee-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Hero Section */
