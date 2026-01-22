@@ -1,11 +1,8 @@
-import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Text, Html } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import './TechSpiderWeb.css';
 
-// Technology data with CDN logo URLs - EXPANDED
+// Technology data with CDN logo URLs
 const technologies = [
   // Cloud & DevOps (8)
   { name: 'AWS', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg', category: 'cloud', color: '#FF9900' },
@@ -62,220 +59,14 @@ const technologies = [
   { name: 'Kotlin', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg', category: 'emerging', color: '#7F52FF' },
 ];
 
-// Animated Spider Component
-function Spider({ webGeometry, index, speed = 1 }) {
-  const spiderRef = useRef();
-  const [currentSegment, setCurrentSegment] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [direction, setDirection] = useState(1);
-
-  // Get path along web connections
-  const path = useMemo(() => {
-    const connections = webGeometry.connections;
-    const startIdx = (index * 7) % connections.length;
-    const pathLength = 5 + Math.floor(Math.random() * 5);
-    const selectedPath = [];
-
-    for (let i = 0; i < pathLength; i++) {
-      selectedPath.push(connections[(startIdx + i) % connections.length]);
-    }
-    return selectedPath;
-  }, [webGeometry, index]);
-
-  useFrame((state, delta) => {
-    if (!spiderRef.current || path.length === 0) return;
-
-    const segment = path[currentSegment];
-    if (!segment) return;
-
-    const p1 = webGeometry.points[segment[0]];
-    const p2 = webGeometry.points[segment[1]];
-
-    // Update progress
-    const newProgress = progress + delta * speed * 0.3 * direction;
-
-    if (newProgress >= 1) {
-      // Move to next segment
-      const nextSegment = (currentSegment + 1) % path.length;
-      setCurrentSegment(nextSegment);
-      setProgress(0);
-    } else if (newProgress <= 0) {
-      // Move to previous segment
-      const prevSegment = currentSegment === 0 ? path.length - 1 : currentSegment - 1;
-      setCurrentSegment(prevSegment);
-      setProgress(1);
-    } else {
-      setProgress(newProgress);
-    }
-
-    // Interpolate position
-    const t = Math.max(0, Math.min(1, progress));
-    const x = p1.x + (p2.x - p1.x) * t;
-    const y = p1.y + (p2.y - p1.y) * t;
-    const z = p1.z + (p2.z - p1.z) * t + 0.1;
-
-    spiderRef.current.position.set(x, y, z);
-
-    // Rotate spider to face movement direction
-    const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    spiderRef.current.rotation.z = angle;
-
-    // Animate legs
-    const time = state.clock.elapsedTime;
-    spiderRef.current.children.forEach((leg, i) => {
-      if (leg.isGroup) {
-        leg.rotation.z = Math.sin(time * 10 + i * 0.5) * 0.3;
-      }
-    });
-  });
-
-  return (
-    <group ref={spiderRef}>
-      {/* Spider body */}
-      <mesh>
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshBasicMaterial color="#1a1a2e" />
-      </mesh>
-      {/* Spider abdomen */}
-      <mesh position={[-0.2, 0, 0]}>
-        <sphereGeometry args={[0.2, 16, 16]} />
-        <meshBasicMaterial color="#0d0d1a" />
-      </mesh>
-      {/* Eyes */}
-      <mesh position={[0.1, 0.05, 0.08]}>
-        <sphereGeometry args={[0.04, 8, 8]} />
-        <meshBasicMaterial color="#ff0044" emissive="#ff0044" emissiveIntensity={2} />
-      </mesh>
-      <mesh position={[0.1, -0.05, 0.08]}>
-        <sphereGeometry args={[0.04, 8, 8]} />
-        <meshBasicMaterial color="#ff0044" emissive="#ff0044" emissiveIntensity={2} />
-      </mesh>
-      {/* Legs */}
-      {[...Array(8)].map((_, i) => {
-        const side = i < 4 ? 1 : -1;
-        const legIndex = i % 4;
-        const angles = [-0.5, -0.2, 0.2, 0.5];
-        return (
-          <group key={i} position={[0, side * 0.1, 0]} rotation={[0, 0, angles[legIndex] * side]}>
-            <mesh position={[0.15, side * 0.15, 0]} rotation={[0, 0, side * 0.8]}>
-              <cylinderGeometry args={[0.02, 0.015, 0.3, 8]} />
-              <meshBasicMaterial color="#2a2a4e" />
-            </mesh>
-          </group>
-        );
-      })}
-    </group>
-  );
-}
-
-// Spider Web 3D Component
-function SpiderWeb({ scrollProgress, activeCategory, webScale, filteredTechCount }) {
-  const webRef = useRef();
-  const nodesRef = useRef([]);
-
-  // Generate web structure - dynamic based on filtered count
-  const webGeometry = useMemo(() => {
-    const rings = activeCategory === 'all' ? 6 : 4;
-    const spokes = activeCategory === 'all' ? 16 : 12;
-    const maxRadius = activeCategory === 'all' ? 7 : 5;
-    const points = [];
-    const connections = [];
-
-    // Generate ring points
-    for (let r = 1; r <= rings; r++) {
-      const radius = (r / rings) * maxRadius;
-      for (let s = 0; s < spokes; s++) {
-        const angle = (s / spokes) * Math.PI * 2;
-        const wobble = Math.sin(r * 2 + s * 0.5) * 0.2;
-        points.push({
-          x: Math.cos(angle) * (radius + wobble),
-          y: Math.sin(angle) * (radius + wobble),
-          z: (Math.random() - 0.5) * 0.5,
-          ring: r,
-          spoke: s,
-        });
-      }
-    }
-
-    // Add center point
-    points.unshift({ x: 0, y: 0, z: 0, ring: 0, spoke: 0 });
-
-    // Generate connections (spokes from center)
-    for (let s = 0; s < spokes; s++) {
-      connections.push([0, s + 1]); // Center to first ring
-      for (let r = 1; r < rings; r++) {
-        const current = 1 + (r - 1) * spokes + s;
-        const next = 1 + r * spokes + s;
-        connections.push([current, next]);
-      }
-    }
-
-    // Generate ring connections
-    for (let r = 1; r <= rings; r++) {
-      for (let s = 0; s < spokes; s++) {
-        const current = 1 + (r - 1) * spokes + s;
-        const nextOnRing = 1 + (r - 1) * spokes + ((s + 1) % spokes);
-        connections.push([current, nextOnRing]);
-      }
-    }
-
-    // Add spiral connections for visual interest
-    for (let r = 1; r < rings; r++) {
-      for (let s = 0; s < spokes; s += 2) {
-        const current = 1 + (r - 1) * spokes + s;
-        const diagonal = 1 + r * spokes + ((s + 1) % spokes);
-        connections.push([current, diagonal]);
-      }
-    }
-
-    return { points, connections, rings, spokes };
-  }, [activeCategory]);
-
-  // Create line geometry for web strands
-  const linePositions = useMemo(() => {
-    const positions = [];
-    webGeometry.connections.forEach(([i, j]) => {
-      const p1 = webGeometry.points[i];
-      const p2 = webGeometry.points[j];
-      if (p1 && p2) {
-        positions.push(p1.x, p1.y, p1.z);
-        positions.push(p2.x, p2.y, p2.z);
-      }
-    });
-    return new Float32Array(positions);
-  }, [webGeometry]);
-
-  useFrame((state) => {
-    const time = state.clock.elapsedTime;
-
-    if (webRef.current) {
-      // Subtle rotation based on scroll
-      webRef.current.rotation.z = scrollProgress * Math.PI * 0.5 + time * 0.05;
-      webRef.current.rotation.x = Math.sin(time * 0.2) * 0.1;
-
-      // Update line positions with wave effect
-      const positions = webRef.current.geometry.attributes.position.array;
-      webGeometry.connections.forEach(([i, j], idx) => {
-        const p1 = webGeometry.points[i];
-        const p2 = webGeometry.points[j];
-        if (p1 && p2) {
-          const wave1 = Math.sin(time * 2 + p1.x + p1.y) * 0.05;
-          const wave2 = Math.sin(time * 2 + p2.x + p2.y) * 0.05;
-
-          if (positions[idx * 6 + 2] !== undefined) {
-            positions[idx * 6 + 2] = p1.z + wave1;
-          }
-          if (positions[idx * 6 + 5] !== undefined) {
-            positions[idx * 6 + 5] = p2.z + wave2;
-          }
-        }
-      });
-      webRef.current.geometry.attributes.position.needsUpdate = true;
-    }
-  });
+// Realistic Spider Web Canvas Component
+function SpiderWebCanvas({ activeCategory, mousePos }) {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const timeRef = useRef(0);
 
   const categoryColors = {
-    all: '#00d4ff',
+    all: '#c0c0c0',
     cloud: '#FF9900',
     ai: '#FF6F00',
     frontend: '#61DAFB',
@@ -284,335 +75,360 @@ function SpiderWeb({ scrollProgress, activeCategory, webScale, filteredTechCount
     emerging: '#9333ea',
   };
 
-  const webColor = categoryColors[activeCategory] || '#00d4ff';
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+
+    // Set canvas size
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    const width = rect.width;
+    const height = rect.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const maxRadius = Math.min(width, height) * 0.42;
+
+    // Web configuration
+    const numRadials = 24; // Number of spokes
+    const numSpirals = 18; // Number of spiral rings
+    const webColor = categoryColors[activeCategory] || '#c0c0c0';
+
+    // Generate random offsets for natural look (once)
+    const radialAngles = [];
+    const baseAngle = (Math.PI * 2) / numRadials;
+    for (let i = 0; i < numRadials; i++) {
+      // Add slight randomness to angle (up to 5 degrees)
+      radialAngles.push(baseAngle * i + (Math.random() - 0.5) * 0.1);
+    }
+
+    // Generate spiral intersection points with natural variation
+    const spiralPoints = [];
+    for (let ring = 1; ring <= numSpirals; ring++) {
+      const ringPoints = [];
+      const baseRadius = (ring / numSpirals) * maxRadius;
+      for (let spoke = 0; spoke < numRadials; spoke++) {
+        // Add variation to radius (bumpy web effect)
+        const radiusVariation = 1 + (Math.random() - 0.5) * 0.08;
+        const radius = baseRadius * radiusVariation;
+        const angle = radialAngles[spoke];
+        ringPoints.push({
+          x: centerX + Math.cos(angle) * radius,
+          y: centerY + Math.sin(angle) * radius,
+          baseX: centerX + Math.cos(angle) * radius,
+          baseY: centerY + Math.sin(angle) * radius,
+          angle,
+          radius,
+        });
+      }
+      spiralPoints.push(ringPoints);
+    }
+
+    // Animation function
+    function animate() {
+      timeRef.current += 0.016;
+      const time = timeRef.current;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // Calculate mouse influence
+      const mouseInfluence = mousePos ? {
+        x: (mousePos.x - centerX) * 0.02,
+        y: (mousePos.y - centerY) * 0.02,
+      } : { x: 0, y: 0 };
+
+      // Update points with wind/sway animation
+      spiralPoints.forEach((ring, ringIndex) => {
+        ring.forEach((point, spokeIndex) => {
+          const swayAmount = (ringIndex / numSpirals) * 3; // Outer rings sway more
+          const swayX = Math.sin(time * 0.8 + spokeIndex * 0.3) * swayAmount;
+          const swayY = Math.cos(time * 0.6 + ringIndex * 0.2) * swayAmount;
+
+          point.x = point.baseX + swayX + mouseInfluence.x * (ringIndex / numSpirals);
+          point.y = point.baseY + swayY + mouseInfluence.y * (ringIndex / numSpirals);
+        });
+      });
+
+      // Draw radial threads (spokes) - from center to edge
+      ctx.strokeStyle = webColor;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.9;
+      ctx.shadowBlur = 3;
+      ctx.shadowColor = webColor;
+
+      for (let i = 0; i < numRadials; i++) {
+        const angle = radialAngles[i];
+        const outerPoint = spiralPoints[spiralPoints.length - 1][i];
+
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(outerPoint.x, outerPoint.y);
+        ctx.stroke();
+      }
+
+      // Draw spiral threads (connecting arcs between radials)
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.8;
+      ctx.shadowBlur = 2;
+
+      spiralPoints.forEach((ring, ringIndex) => {
+        ctx.beginPath();
+
+        for (let i = 0; i < ring.length; i++) {
+          const point = ring[i];
+          const nextPoint = ring[(i + 1) % ring.length];
+
+          if (i === 0) {
+            ctx.moveTo(point.x, point.y);
+          }
+
+          // Draw curved line to next point (quadratic curve for natural look)
+          const midX = (point.x + nextPoint.x) / 2;
+          const midY = (point.y + nextPoint.y) / 2;
+
+          // Add slight sag to the thread
+          const sag = 2 + ringIndex * 0.3;
+          const sagX = midX + (Math.random() - 0.5) * sag * 0.5;
+          const sagY = midY + sag;
+
+          ctx.quadraticCurveTo(sagX, sagY, nextPoint.x, nextPoint.y);
+        }
+
+        ctx.closePath();
+        ctx.stroke();
+      });
+
+      // Draw anchor points (thicker at intersections)
+      ctx.fillStyle = webColor;
+      ctx.globalAlpha = 0.6;
+      ctx.shadowBlur = 4;
+
+      spiralPoints.forEach((ring, ringIndex) => {
+        if (ringIndex % 3 === 0) { // Every 3rd ring
+          ring.forEach((point) => {
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        }
+      });
+
+      // Draw center hub
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = webColor;
+
+      // Outer hub circle
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 15, 0, Math.PI * 2);
+      ctx.strokeStyle = webColor;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Inner hub
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+      ctx.fillStyle = webColor;
+      ctx.fill();
+
+      // Draw dew drops on some intersections
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = '#ffffff';
+      spiralPoints.forEach((ring, ringIndex) => {
+        if (ringIndex % 4 === 2) {
+          ring.forEach((point, i) => {
+            if (i % 3 === 0) {
+              const dewSize = 2 + Math.sin(time * 2 + i) * 0.5;
+              const gradient = ctx.createRadialGradient(
+                point.x - 1, point.y - 1, 0,
+                point.x, point.y, dewSize
+              );
+              gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+              gradient.addColorStop(0.5, 'rgba(200, 220, 255, 0.6)');
+              gradient.addColorStop(1, 'rgba(150, 200, 255, 0.2)');
+
+              ctx.globalAlpha = 0.8;
+              ctx.fillStyle = gradient;
+              ctx.beginPath();
+              ctx.arc(point.x, point.y, dewSize, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          });
+        }
+      });
+
+      // Reset shadow
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 1;
+
+      animationRef.current = requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [activeCategory, mousePos]);
 
   return (
-    <group scale={webScale}>
-      {/* OUTER GLOW RING - Creates atmosphere */}
-      <mesh position={[0, 0, -0.5]}>
-        <ringGeometry args={[6, 8, 64]} />
-        <meshBasicMaterial color={webColor} transparent opacity={0.08} side={THREE.DoubleSide} />
-      </mesh>
-      <mesh position={[0, 0, -0.5]}>
-        <ringGeometry args={[4, 6.5, 64]} />
-        <meshBasicMaterial color={webColor} transparent opacity={0.12} side={THREE.DoubleSide} />
-      </mesh>
-
-      {/* Web strands - ULTRA VIBRANT - Main layer */}
-      <lineSegments ref={webRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={linePositions.length / 3}
-            array={linePositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial
-          color={webColor}
-          transparent
-          opacity={0.95}
-          linewidth={3}
-        />
-      </lineSegments>
-
-      {/* Second layer - bright white glow */}
-      <lineSegments>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={linePositions.length / 3}
-            array={linePositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial
-          color="#ffffff"
-          transparent
-          opacity={0.3}
-          linewidth={4}
-        />
-      </lineSegments>
-
-      {/* Third layer - colored outer glow */}
-      <lineSegments position={[0, 0, -0.02]}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={linePositions.length / 3}
-            array={linePositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial
-          color={webColor}
-          transparent
-          opacity={0.4}
-          linewidth={6}
-        />
-      </lineSegments>
-
-      {/* Glowing center - ULTRA VIBRANT with multiple layers */}
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.4, 32, 32]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={1} />
-      </mesh>
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.55, 32, 32]} />
-        <meshBasicMaterial color={webColor} transparent opacity={0.9} />
-      </mesh>
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.8, 32, 32]} />
-        <meshBasicMaterial color={webColor} transparent opacity={0.5} />
-      </mesh>
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[1.2, 32, 32]} />
-        <meshBasicMaterial color={webColor} transparent opacity={0.25} />
-      </mesh>
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[1.8, 32, 32]} />
-        <meshBasicMaterial color={webColor} transparent opacity={0.1} />
-      </mesh>
-
-      {/* Web junction points with enhanced glow */}
-      {webGeometry.points.slice(1).map((point, i) => (
-        <group key={i} position={[point.x, point.y, point.z]}>
-          <mesh>
-            <sphereGeometry args={[0.05, 16, 16]} />
-            <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
-          </mesh>
-          <mesh>
-            <sphereGeometry args={[0.1, 16, 16]} />
-            <meshBasicMaterial color={webColor} transparent opacity={0.5} />
-          </mesh>
-          <mesh>
-            <sphereGeometry args={[0.15, 16, 16]} />
-            <meshBasicMaterial color={webColor} transparent opacity={0.2} />
-          </mesh>
-        </group>
-      ))}
-
-      {/* Pulsing rings emanating from center */}
-      {[1.5, 2.5, 3.5, 4.5, 5.5].map((radius, i) => (
-        <mesh key={`ring-${i}`} position={[0, 0, -0.1]} rotation={[0, 0, (i * Math.PI) / 8]}>
-          <ringGeometry args={[radius - 0.05, radius + 0.05, 64]} />
-          <meshBasicMaterial color={webColor} transparent opacity={0.15 - i * 0.02} side={THREE.DoubleSide} />
-        </mesh>
-      ))}
-
-      {/* Walking Spiders */}
-      {[0, 1, 2, 3].map((i) => (
-        <Spider
-          key={i}
-          webGeometry={webGeometry}
-          index={i}
-          speed={0.4 + i * 0.25}
-        />
-      ))}
-    </group>
+    <canvas
+      ref={canvasRef}
+      className="spider-web-canvas-element"
+      style={{ width: '100%', height: '100%' }}
+    />
   );
 }
 
-// Floating Tech Node Component
-function TechNode({ tech, position, delay, scrollProgress, isVisible, targetPosition }) {
-  const meshRef = useRef();
-  const [hovered, setHovered] = useState(false);
-  const [currentPos, setCurrentPos] = useState(position);
+// Walking Spider Component
+function WalkingSpider({ index, containerRef }) {
+  const [position, setPosition] = useState({ x: 50, y: 50 });
+  const [rotation, setRotation] = useState(0);
+  const [isWalking, setIsWalking] = useState(true);
+  const targetRef = useRef({ x: 50, y: 50 });
+  const animationRef = useRef(null);
 
-  // Animate to target position
-  useFrame((state, delta) => {
-    const time = state.clock.elapsedTime;
-    if (meshRef.current) {
-      // Smooth transition to target position
-      const lerpFactor = 0.05;
-      currentPos[0] += (targetPosition[0] - currentPos[0]) * lerpFactor;
-      currentPos[1] += (targetPosition[1] - currentPos[1]) * lerpFactor;
-      currentPos[2] += (targetPosition[2] - currentPos[2]) * lerpFactor;
+  useEffect(() => {
+    // Set random starting position
+    setPosition({
+      x: 20 + Math.random() * 60,
+      y: 20 + Math.random() * 60,
+    });
 
-      // Float animation
-      meshRef.current.position.y = currentPos[1] + Math.sin(time * 0.5 + delay) * 0.2;
-      meshRef.current.position.x = currentPos[0] + Math.cos(time * 0.3 + delay) * 0.1;
-      meshRef.current.position.z = currentPos[2];
+    // Pick new random target periodically
+    const pickNewTarget = () => {
+      targetRef.current = {
+        x: 15 + Math.random() * 70,
+        y: 15 + Math.random() * 70,
+      };
+    };
 
-      // Pulse when hovered
-      const targetScale = isVisible ? (hovered ? 1.3 : 1) : 0;
-      const currentScale = meshRef.current.scale.x;
-      meshRef.current.scale.setScalar(currentScale + (targetScale - currentScale) * 0.1);
-    }
-  });
+    pickNewTarget();
+    const targetInterval = setInterval(pickNewTarget, 3000 + index * 1000);
 
+    // Animate towards target
+    const animate = () => {
+      setPosition(prev => {
+        const dx = targetRef.current.x - prev.x;
+        const dy = targetRef.current.y - prev.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 1) {
+          setIsWalking(false);
+          return prev;
+        }
+
+        setIsWalking(true);
+        const speed = 0.3 + index * 0.1;
+        const newRotation = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        setRotation(newRotation);
+
+        return {
+          x: prev.x + (dx / distance) * speed,
+          y: prev.y + (dy / distance) * speed,
+        };
+      });
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      clearInterval(targetInterval);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [index]);
+
+  return (
+    <div
+      className={`walking-spider ${isWalking ? 'walking' : ''}`}
+      style={{
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+        transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+      }}
+    >
+      <svg viewBox="0 0 100 100" width="40" height="40">
+        {/* Spider body */}
+        <ellipse cx="50" cy="55" rx="12" ry="18" fill="#1a1a2e" />
+        <ellipse cx="50" cy="35" rx="10" ry="12" fill="#0d0d1a" />
+
+        {/* Eyes */}
+        <circle cx="45" cy="30" r="3" fill="#ff0044" className="spider-eye" />
+        <circle cx="55" cy="30" r="3" fill="#ff0044" className="spider-eye" />
+
+        {/* Legs - left side */}
+        <path d="M40 40 Q20 30 10 15" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-1" />
+        <path d="M38 48 Q15 45 5 35" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-2" />
+        <path d="M38 58 Q15 60 5 70" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-3" />
+        <path d="M40 65 Q20 75 10 90" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-4" />
+
+        {/* Legs - right side */}
+        <path d="M60 40 Q80 30 90 15" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-5" />
+        <path d="M62 48 Q85 45 95 35" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-6" />
+        <path d="M62 58 Q85 60 95 70" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-7" />
+        <path d="M60 65 Q80 75 90 90" stroke="#2a2a4e" strokeWidth="3" fill="none" className="spider-leg leg-8" />
+      </svg>
+    </div>
+  );
+}
+
+// Tech Node Component (Floating on the web)
+function TechNode({ tech, position, delay, isVisible, onClick }) {
   if (!isVisible) return null;
 
   return (
-    <group ref={meshRef} position={position}>
-      <Html
-        center
-        distanceFactor={10}
-        style={{
-          transition: 'all 0.3s ease',
-          transform: hovered ? 'scale(1.2)' : 'scale(1)',
-          opacity: isVisible ? 1 : 0,
+    <motion.div
+      className="tech-node-floating"
+      style={{
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+        '--tech-color': tech.color,
+      }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0, opacity: 0 }}
+      transition={{ delay: delay * 0.05, duration: 0.3 }}
+      whileHover={{ scale: 1.2, zIndex: 100 }}
+      onClick={() => onClick && onClick(tech)}
+    >
+      <div className="tech-node-glow" />
+      <img
+        src={tech.logo}
+        alt={tech.name}
+        className="tech-logo"
+        onError={(e) => {
+          e.target.style.display = 'none';
+          e.target.nextSibling.style.display = 'flex';
         }}
-      >
-        <div
-          className={`tech-node-html ${hovered ? 'hovered' : ''}`}
-          onPointerEnter={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
-          style={{ '--tech-color': tech.color }}
-        >
-          <div className="tech-node-glow" />
-          <img
-            src={tech.logo}
-            alt={tech.name}
-            className="tech-logo"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-          <div className="tech-logo-fallback" style={{ display: 'none' }}>
-            {tech.name.slice(0, 2)}
-          </div>
-          <span className="tech-name">{tech.name}</span>
-          <div className="web-strand-connection" />
-        </div>
-      </Html>
-    </group>
-  );
-}
-
-// Camera Controller for zoom transitions
-function CameraController({ activeCategory, targetZoom }) {
-  const { camera } = useThree();
-  const targetRef = useRef({ z: 12, x: 0, y: 0 });
-
-  useEffect(() => {
-    // Set camera position based on category
-    if (activeCategory === 'all') {
-      targetRef.current = { z: 14, x: 0, y: 0 };
-    } else {
-      targetRef.current = { z: 10, x: 0, y: 0 };
-    }
-  }, [activeCategory]);
-
-  useFrame(() => {
-    // Smooth camera transition
-    camera.position.z += (targetRef.current.z - camera.position.z) * 0.05;
-    camera.position.x += (targetRef.current.x - camera.position.x) * 0.05;
-    camera.position.y += (targetRef.current.y - camera.position.y) * 0.05;
-  });
-
-  return null;
-}
-
-// 3D Scene
-function Scene({ scrollProgress, activeCategory }) {
-  // Filter technologies based on category
-  const filteredTechs = useMemo(() => {
-    if (activeCategory === 'all') return technologies;
-    return technologies.filter(tech => tech.category === activeCategory);
-  }, [activeCategory]);
-
-  // Position tech nodes on the web - recalculate when filter changes
-  const techPositions = useMemo(() => {
-    const techCount = filteredTechs.length;
-    const allCount = technologies.length;
-
-    return technologies.map((tech, i) => {
-      const isVisible = activeCategory === 'all' || tech.category === activeCategory;
-      const visibleIndex = filteredTechs.findIndex(t => t.name === tech.name);
-
-      // Calculate position based on whether visible
-      let angle, radius, z;
-
-      if (isVisible && visibleIndex !== -1) {
-        // Position on smaller/larger web based on category
-        angle = (visibleIndex / techCount) * Math.PI * 2;
-        const ring = 1 + (visibleIndex % (activeCategory === 'all' ? 5 : 3));
-        radius = ring * (activeCategory === 'all' ? 1.5 : 1.8);
-        z = (Math.random() - 0.5) * 2;
-      } else {
-        // Move off-screen
-        angle = (i / allCount) * Math.PI * 2;
-        radius = 15;
-        z = 10;
-      }
-
-      return {
-        tech,
-        originalPosition: [
-          Math.cos(angle) * radius,
-          Math.sin(angle) * radius,
-          z
-        ],
-        targetPosition: [
-          Math.cos(angle) * radius,
-          Math.sin(angle) * radius,
-          isVisible ? (Math.random() - 0.5) * 2 : 10
-        ],
-        delay: i * 0.5,
-        isVisible,
-      };
-    });
-  }, [activeCategory, filteredTechs]);
-
-  const webScale = activeCategory === 'all' ? 1 : 0.9;
-
-  return (
-    <>
-      <ambientLight intensity={0.6} />
-      <pointLight position={[10, 10, 10]} intensity={1.2} color="#00d4ff" />
-      <pointLight position={[-10, -10, -10]} intensity={0.8} color="#9333ea" />
-      <pointLight position={[0, 0, 5]} intensity={0.5} color="#00ff88" />
-
-      <CameraController activeCategory={activeCategory} />
-
-      <SpiderWeb
-        scrollProgress={scrollProgress}
-        activeCategory={activeCategory}
-        webScale={webScale}
-        filteredTechCount={filteredTechs.length}
       />
-
-      {techPositions.map(({ tech, originalPosition, targetPosition, delay, isVisible }, i) => (
-        <TechNode
-          key={tech.name}
-          tech={tech}
-          position={originalPosition}
-          targetPosition={targetPosition}
-          delay={delay}
-          scrollProgress={scrollProgress}
-          isVisible={isVisible}
-        />
-      ))}
-
-      {/* Particles */}
-      <group>
-        {Array.from({ length: 80 }).map((_, i) => (
-          <mesh
-            key={i}
-            position={[
-              (Math.random() - 0.5) * 25,
-              (Math.random() - 0.5) * 25,
-              (Math.random() - 0.5) * 15,
-            ]}
-          >
-            <sphereGeometry args={[0.04, 8, 8]} />
-            <meshBasicMaterial color="#00d4ff" transparent opacity={0.5} />
-          </mesh>
-        ))}
-      </group>
-    </>
+      <div className="tech-logo-fallback" style={{ display: 'none' }}>
+        {tech.name.slice(0, 2)}
+      </div>
+      <span className="tech-name">{tech.name}</span>
+    </motion.div>
   );
 }
 
 // Main Component
 export default function TechSpiderWeb() {
   const containerRef = useRef(null);
+  const webContainerRef = useRef(null);
   const isInView = useInView(containerRef, { amount: 0.3 });
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeCategory, setActiveCategory] = useState('all');
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [mousePos, setMousePos] = useState(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -629,9 +445,47 @@ export default function TechSpiderWeb() {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
 
+  // Handle mouse move for web interaction
+  const handleMouseMove = useCallback((e) => {
+    if (webContainerRef.current) {
+      const rect = webContainerRef.current.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  }, []);
+
+  // Filter technologies based on category
+  const filteredTechs = useMemo(() => {
+    if (activeCategory === 'all') return technologies;
+    return technologies.filter(tech => tech.category === activeCategory);
+  }, [activeCategory]);
+
+  // Generate positions for tech nodes on the web
+  const techPositions = useMemo(() => {
+    return filteredTechs.map((tech, i) => {
+      const totalTechs = filteredTechs.length;
+      const angle = (i / totalTechs) * Math.PI * 2 - Math.PI / 2;
+
+      // Distribute across multiple rings
+      const ring = Math.floor(i / 8) + 1;
+      const maxRings = Math.ceil(totalTechs / 8);
+      const radiusPercent = 20 + (ring / maxRings) * 25;
+
+      return {
+        tech,
+        position: {
+          x: 50 + Math.cos(angle) * radiusPercent,
+          y: 50 + Math.sin(angle) * radiusPercent,
+        },
+      };
+    });
+  }, [filteredTechs]);
+
   // Category filters
   const categories = [
-    { id: 'all', name: 'All Technologies', color: '#00d4ff', count: technologies.length },
+    { id: 'all', name: 'All Technologies', color: '#c0c0c0', count: technologies.length },
     { id: 'cloud', name: 'Cloud & DevOps', color: '#FF9900', count: technologies.filter(t => t.category === 'cloud').length },
     { id: 'ai', name: 'AI & Machine Learning', color: '#FF6F00', count: technologies.filter(t => t.category === 'ai').length },
     { id: 'frontend', name: 'Frontend', color: '#61DAFB', count: technologies.filter(t => t.category === 'frontend').length },
@@ -644,7 +498,7 @@ export default function TechSpiderWeb() {
     if (catId === activeCategory) return;
     setIsTransitioning(true);
     setActiveCategory(catId);
-    setTimeout(() => setIsTransitioning(false), 800);
+    setTimeout(() => setIsTransitioning(false), 500);
   }, [activeCategory]);
 
   const activeCategoryData = categories.find(c => c.id === activeCategory);
@@ -709,36 +563,42 @@ export default function TechSpiderWeb() {
           </motion.div>
         </AnimatePresence>
 
-        {/* 3D Spider Web Canvas */}
+        {/* Spider Web Container */}
         <motion.div
-          className={`spider-web-canvas ${isTransitioning ? 'transitioning' : ''}`}
+          ref={webContainerRef}
+          className={`spider-web-container ${isTransitioning ? 'transitioning' : ''}`}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setMousePos(null)}
           animate={{
-            scale: isTransitioning ? 0.95 : 1,
-            opacity: isTransitioning ? 0.8 : 1,
+            scale: isTransitioning ? 0.98 : 1,
           }}
           transition={{ duration: 0.3 }}
         >
-          <Canvas
-            camera={{ position: [0, 0, 14], fov: 60 }}
-            gl={{ antialias: true, alpha: true }}
-            dpr={[1, 2]}
-          >
-            <Scene
-              scrollProgress={scrollProgress}
-              activeCategory={activeCategory}
-            />
-          </Canvas>
+          {/* Canvas Spider Web */}
+          <SpiderWebCanvas
+            activeCategory={activeCategory}
+            mousePos={mousePos}
+          />
 
-          {/* Decorative elements */}
-          <div className="web-decorations">
-            <div className="dew-drop dew-1" />
-            <div className="dew-drop dew-2" />
-            <div className="dew-drop dew-3" />
-            <div className="dew-drop dew-4" />
-            <div className="dew-drop dew-5" />
-          </div>
+          {/* Technology Nodes */}
+          <AnimatePresence>
+            {techPositions.map(({ tech, position }, i) => (
+              <TechNode
+                key={tech.name}
+                tech={tech}
+                position={position}
+                delay={i}
+                isVisible={true}
+              />
+            ))}
+          </AnimatePresence>
 
-          {/* Spider crawl indicator */}
+          {/* Walking Spiders */}
+          <WalkingSpider index={0} containerRef={webContainerRef} />
+          <WalkingSpider index={1} containerRef={webContainerRef} />
+          <WalkingSpider index={2} containerRef={webContainerRef} />
+
+          {/* Spider indicator */}
           <div className="spider-indicator">
             <span className="spider-emoji">🕷️</span>
             <span className="spider-text">Spiders are crawling the web...</span>
@@ -752,7 +612,7 @@ export default function TechSpiderWeb() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 1 }}
         >
-          <span>Scroll to explore the web</span>
+          <span>Move your mouse over the web</span>
           <motion.div
             className="scroll-arrow"
             animate={{ y: [0, 10, 0] }}
@@ -793,9 +653,6 @@ export default function TechSpiderWeb() {
         <div className="web-glow glow-1" />
         <div className="web-glow glow-2" />
         <div className="web-glow glow-3" />
-        <div className="spider-silk silk-1" />
-        <div className="spider-silk silk-2" />
-        <div className="spider-silk silk-3" />
       </div>
     </section>
   );
