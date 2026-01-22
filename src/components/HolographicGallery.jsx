@@ -5,12 +5,53 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sparkles, Trail, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
+// OwnPATH Core Values - Our Core Beliefs
 const images = [
-  { id: 1, src: '/images/Hero-Img-v3.2.webp', title: 'Innovation Hub', subtitle: 'Where Ideas Come Alive', color: '#00d4ff' },
-  { id: 2, src: '/images/AIDSecI.webp', title: 'AI & Security', subtitle: 'Intelligent Protection', color: '#9333ea' },
-  { id: 3, src: '/images/Service-Card-4.webp', title: 'Digital Services', subtitle: 'Transform Your Business', color: '#00ff88' },
-  { id: 4, src: '/images/bs-212.webp', title: 'Our Legacy', subtitle: '19+ Years of Excellence', color: '#ffd700' },
-  { id: 5, src: '/images/ctaimg-1.webp', title: 'Future Forward', subtitle: 'Building Tomorrow', color: '#ff6b35' },
+  {
+    id: 1,
+    src: '/images/Hero-Img-v3.2.webp',
+    title: 'Ownership',
+    subtitle: 'Own - Taking Full Responsibility',
+    description: 'We own our work, our decisions, and our impact. Every team member takes full accountability for delivering excellence.',
+    letter: 'O',
+    color: '#00d4ff'
+  },
+  {
+    id: 2,
+    src: '/images/AIDSecI.webp',
+    title: 'Passion & Commitment',
+    subtitle: 'P - Driven by Purpose',
+    description: 'Our passion fuels innovation. We are deeply committed to our craft and to exceeding expectations in everything we do.',
+    letter: 'P',
+    color: '#ff4da6'
+  },
+  {
+    id: 3,
+    src: '/images/Service-Card-4.webp',
+    title: 'Agility & Excellence',
+    subtitle: 'A - Adaptive and Outstanding',
+    description: 'We embrace change with agility while maintaining the highest standards of excellence in every deliverable.',
+    letter: 'A',
+    color: '#00ff88'
+  },
+  {
+    id: 4,
+    src: '/images/bs-212.webp',
+    title: 'Team Spirit',
+    subtitle: 'T - Together We Achieve More',
+    description: 'Collaboration is our strength. We believe in the power of teamwork to achieve extraordinary results.',
+    letter: 'T',
+    color: '#ffd700'
+  },
+  {
+    id: 5,
+    src: '/images/ctaimg-1.webp',
+    title: 'Honesty',
+    subtitle: 'H - Integrity in All We Do',
+    description: 'Transparency and honesty form the foundation of our relationships with clients, partners, and each other.',
+    letter: 'H',
+    color: '#9333ea'
+  },
 ];
 
 // 3D Floating Orb Component
@@ -490,29 +531,30 @@ function FullscreenViewer({ image, onClose }) {
         {/* Scanlines */}
         <div className="viewer-scanlines" />
 
-        {/* Info Bar */}
+        {/* Info Bar - OwnPATH Value */}
         <motion.div
-          className="viewer-info"
+          className="viewer-info ownpath-viewer-info"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
           <div className="info-left">
             <motion.span
-              className="info-index"
-              style={{ color: image.color }}
+              className="info-letter"
+              style={{ color: image.color, textShadow: `0 0 30px ${image.color}` }}
             >
-              0{image.id}
+              {image.letter}
             </motion.span>
             <div className="info-text">
               <h3>{image.title}</h3>
-              <p>{image.subtitle}</p>
+              <p className="info-subtitle">{image.subtitle}</p>
+              <p className="info-description">{image.description}</p>
             </div>
           </div>
           <div className="info-right">
-            <div className="status-indicator">
-              <span className="status-dot" style={{ background: image.color }} />
-              <span>VIEWING</span>
+            <div className="ownpath-badge">
+              <span className="badge-label">OwnPATH</span>
+              <span className="badge-value" style={{ background: image.color }}>Core Value</span>
             </div>
           </div>
         </motion.div>
@@ -585,7 +627,7 @@ function HolographicGallery() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          Visual Excellence
+          OwnPATH Values
         </motion.span>
         <motion.h2
           className="section-title"
@@ -594,8 +636,24 @@ function HolographicGallery() {
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
         >
-          OUR <span className="highlight">VISION</span> IN MOTION
+          OUR <span className="highlight">CORE BELIEFS</span>
         </motion.h2>
+        <motion.p
+          className="section-subtitle"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+        >
+          <span className="ownpath-letters">
+            <span style={{ color: '#00d4ff' }}>Own</span>
+            <span style={{ color: '#ff4da6' }}>P</span>
+            <span style={{ color: '#00ff88' }}>A</span>
+            <span style={{ color: '#ffd700' }}>T</span>
+            <span style={{ color: '#9333ea' }}>H</span>
+          </span>
+          {' '}- The values that drive everything we do
+        </motion.p>
       </div>
 
       <div
@@ -650,7 +708,7 @@ function HolographicGallery() {
           </AnimatePresence>
         </svg>
 
-        {/* Central Nexus Overlay */}
+        {/* Central Nexus Overlay - OwnPATH */}
         <motion.div
           className="nexus-overlay"
           animate={{
@@ -659,9 +717,9 @@ function HolographicGallery() {
           }}
           transition={{ type: 'spring', stiffness: 100, damping: 20 }}
         >
-          <div className="nexus-content">
-            <span className="nexus-bs">BS</span>
-            <span className="nexus-23">23</span>
+          <div className="nexus-content ownpath-nexus">
+            <span className="nexus-own">Own</span>
+            <span className="nexus-path">PATH</span>
           </div>
         </motion.div>
 
@@ -679,27 +737,41 @@ function HolographicGallery() {
           />
         ))}
 
-        {/* Floating Labels */}
+        {/* Floating Labels - OwnPATH Values */}
         <motion.div
           className="floating-label label-1"
-          animate={{ y: [0, -15, 0], opacity: [0.3, 0.6, 0.3] }}
+          animate={{ y: [0, -15, 0], opacity: [0.3, 0.7, 0.3] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
         >
-          {'<innovation/>'}
+          {'<Ownership/>'}
         </motion.div>
         <motion.div
           className="floating-label label-2"
-          animate={{ y: [0, 15, 0], opacity: [0.3, 0.6, 0.3] }}
+          animate={{ y: [0, 15, 0], opacity: [0.3, 0.7, 0.3] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
         >
-          {'{transform}'}
+          {'{Passion}'}
         </motion.div>
         <motion.div
           className="floating-label label-3"
-          animate={{ y: [0, -10, 0], opacity: [0.3, 0.6, 0.3] }}
+          animate={{ y: [0, -10, 0], opacity: [0.3, 0.7, 0.3] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
         >
-          [excellence]
+          [Agility]
+        </motion.div>
+        <motion.div
+          className="floating-label label-4"
+          animate={{ y: [0, 12, 0], opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+        >
+          {'//TeamSpirit'}
+        </motion.div>
+        <motion.div
+          className="floating-label label-5"
+          animate={{ y: [0, -12, 0], opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+        >
+          {'#Honesty'}
         </motion.div>
       </div>
 

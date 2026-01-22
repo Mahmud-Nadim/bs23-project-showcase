@@ -338,8 +338,10 @@ export default function GlobalOffices3D() {
               // No background - transparent
               backgroundColor="rgba(0,0,0,0)"
 
-              // Atmosphere disabled for clear view
-              showAtmosphere={false}
+              // Atmosphere - beautiful glow effect
+              showAtmosphere={true}
+              atmosphereColor="#00d4ff"
+              atmosphereAltitude={0.2}
 
               // Points (office markers)
               pointsData={pointsData}

@@ -11,6 +11,9 @@ import './TechSpiderWeb.css';
 import GlobalOffices3D from './GlobalOffices3D';
 import './GlobalOffices3D.css';
 
+// Import HolographicGallery for Our Core Beliefs
+import HolographicGallery from './HolographicGallery';
+
 // Smooth scroll hook for Apple-like animations
 function useParallax(value, distance) {
   return useTransform(value, [0, 1], [-distance, distance]);
@@ -938,6 +941,7 @@ export default function AppleScrollSections() {
   return (
     <div className="apple-scroll-container">
       <AboutSection />
+      <HolographicGallery />
       <ServicesSection />
       <CaseStudiesSection />
       <TechSpiderWeb />

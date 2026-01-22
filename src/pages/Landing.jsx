@@ -10,8 +10,6 @@ import '../components/NeuralHero3D.css';
 import AppleScrollSections from '../components/AppleScrollSections';
 import '../components/AppleScrollSections.css';
 
-// Existing Components
-import HolographicGallery from '../components/HolographicGallery';
 import './Landing.css';
 
 // Counter Hook
@@ -240,11 +238,8 @@ export default function Landing() {
       {/* Epic 3D Neural Hero Section */}
       <NeuralHero3D />
 
-      {/* Apple-Style Scroll Animated Sections */}
+      {/* Apple-Style Scroll Animated Sections (includes Our Core Beliefs, Tech Spider Web, Globe) */}
       <AppleScrollSections />
-
-      {/* Holographic Gallery */}
-      <HolographicGallery />
 
       {/* Client Marquee */}
       <ClientsMarquee />

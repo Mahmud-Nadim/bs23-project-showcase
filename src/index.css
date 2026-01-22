@@ -2,31 +2,36 @@
 @import './styles/GlitchEffects.css';
 
 :root {
-  /* Dark Mode (Default) */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #0d1117;
-  --bg-tertiary: #161b22;
-  --bg-card: rgba(255, 255, 255, 0.02);
-  --bg-card-hover: rgba(255, 255, 255, 0.05);
+  /* Dark Mode (Default) - HIGH CONTRAST */
+  --bg-primary: #050508;
+  --bg-secondary: #0a0d12;
+  --bg-tertiary: #12171f;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-card-hover: rgba(255, 255, 255, 0.08);
 
-  --accent-cyan: #00d4ff;
+  /* VIVID Accent Colors - Increased saturation and brightness */
+  --accent-cyan: #00e5ff;
   --accent-green: #00ff88;
-  --accent-purple: #9333ea;
+  --accent-purple: #a855f7;
   --accent-gold: #ffd700;
-  --accent-red: #ff4444;
-  --accent-orange: #ff6b35;
-  --accent-blue: #3b82f6;
+  --accent-red: #ff3b3b;
+  --accent-orange: #ff7043;
+  --accent-blue: #4f8fff;
+  --accent-pink: #ff4da6;
 
+  /* Text with better contrast */
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-muted: rgba(255, 255, 255, 0.55);
 
-  --border-default: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(0, 212, 255, 0.5);
+  /* Brighter borders */
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-hover: rgba(0, 229, 255, 0.6);
 
-  --glow-cyan: 0 0 40px rgba(0, 212, 255, 0.4);
-  --glow-green: 0 0 40px rgba(0, 255, 136, 0.4);
-  --glow-purple: 0 0 40px rgba(147, 51, 234, 0.4);
+  /* Enhanced glows - more intense */
+  --glow-cyan: 0 0 50px rgba(0, 229, 255, 0.5), 0 0 100px rgba(0, 229, 255, 0.2);
+  --glow-green: 0 0 50px rgba(0, 255, 136, 0.5), 0 0 100px rgba(0, 255, 136, 0.2);
+  --glow-purple: 0 0 50px rgba(168, 85, 247, 0.5), 0 0 100px rgba(168, 85, 247, 0.2);
 
   /* Modal */
   --modal-overlay: rgba(0, 0, 0, 0.9);
