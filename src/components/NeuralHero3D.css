@@ -127,27 +127,211 @@
   text-transform: uppercase;
 }
 
-/* Main Title */
+/* Floating Code Symbols */
+.hero-code-symbols {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.floating-code-symbol {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  color: #00d4ff;
+  opacity: 0.2;
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* Logo Glitch Wrapper */
+.logo-glitch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-glitch-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(0, 212, 255, 0.1) 50%,
+    transparent 60%
+  );
+  animation: logoSweep 3s linear infinite;
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+@keyframes logoSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Code Brackets */
+.code-bracket {
+  color: #00ff88;
+  font-weight: 700;
+  margin: 0 0.25rem;
+}
+
+/* Main Title with INTENSE GLITCH */
 .neural-hero-title {
   font-family: var(--font-display, 'Orbitron', sans-serif);
   font-size: clamp(2.5rem, 8vw, 6rem);
   font-weight: 900;
   line-height: 1;
   margin: 0 0 1rem;
-  background: linear-gradient(
-    135deg,
-    #fff 0%,
-    #00d4ff 25%,
-    #fff 50%,
-    #00ff88 75%,
-    #fff 100%
-  );
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientShift 8s ease infinite;
-  text-shadow: 0 0 80px rgba(0, 212, 255, 0.5);
+}
+
+.glitch-title-container {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-title {
+  position: relative;
+  display: inline-block;
+  color: #fff;
+  text-shadow:
+    0 0 10px rgba(0, 212, 255, 0.8),
+    0 0 20px rgba(0, 212, 255, 0.6),
+    0 0 40px rgba(0, 212, 255, 0.4),
+    0 0 80px rgba(0, 212, 255, 0.2);
+  animation: glitchText 4s infinite;
+}
+
+.glitch-title::before,
+.glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.glitch-title::before {
+  color: #00ff88;
+  animation: glitchLeft 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  transform: translate(-3px, -3px);
+}
+
+.glitch-title::after {
+  color: #ff00ff;
+  animation: glitchRight 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  transform: translate(3px, 3px);
+}
+
+/* Glitch layers for RGB split effect */
+.glitch-title-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glitch-active .glitch-title-layer {
+  opacity: 0.8;
+}
+
+.glitch-r {
+  color: #ff0000;
+  animation: glitchLayerR 0.2s infinite;
+}
+
+.glitch-g {
+  color: #00ff00;
+  animation: glitchLayerG 0.2s infinite;
+}
+
+.glitch-b {
+  color: #0000ff;
+  animation: glitchLayerB 0.2s infinite;
+}
+
+@keyframes glitchText {
+  0%, 90%, 100% {
+    transform: translate(0);
+    filter: none;
+  }
+  92% {
+    transform: translate(-5px, 2px) skew(-2deg);
+    filter: hue-rotate(90deg);
+  }
+  94% {
+    transform: translate(5px, -2px) skew(2deg);
+    filter: hue-rotate(-90deg);
+  }
+  96% {
+    transform: translate(-3px, -1px);
+    filter: none;
+  }
+  98% {
+    transform: translate(3px, 1px);
+    filter: none;
+  }
+}
+
+@keyframes glitchLeft {
+  0%, 100% { transform: translate(-2px, -2px); clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%); }
+  25% { transform: translate(-5px, 0); clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); }
+  50% { transform: translate(-2px, 2px); clip-path: polygon(0 10%, 100% 10%, 100% 30%, 0 30%); }
+  75% { transform: translate(0, -3px); clip-path: polygon(0 25%, 100% 25%, 100% 45%, 0 45%); }
+}
+
+@keyframes glitchRight {
+  0%, 100% { transform: translate(2px, 2px); clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%); }
+  25% { transform: translate(5px, 0); clip-path: polygon(0 70%, 100% 70%, 100% 90%, 0 90%); }
+  50% { transform: translate(2px, -2px); clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); }
+  75% { transform: translate(0, 3px); clip-path: polygon(0 75%, 100% 75%, 100% 95%, 0 95%); }
+}
+
+@keyframes glitchLayerR {
+  0%, 100% { transform: translate(-5px, -2px); }
+  50% { transform: translate(5px, 2px); }
+}
+
+@keyframes glitchLayerG {
+  0%, 100% { transform: translate(5px, 2px); }
+  50% { transform: translate(-5px, -2px); }
+}
+
+@keyframes glitchLayerB {
+  0%, 100% { transform: translate(-3px, 3px); }
+  50% { transform: translate(3px, -3px); }
+}
+
+.glitch-active .glitch-title {
+  animation: glitchBurst 0.2s linear;
+}
+
+@keyframes glitchBurst {
+  0% { transform: translate(0) skew(0); }
+  10% { transform: translate(-10px, 5px) skew(-10deg); }
+  20% { transform: translate(10px, -5px) skew(10deg); }
+  30% { transform: translate(-8px, -3px) skew(-5deg); }
+  40% { transform: translate(8px, 3px) skew(5deg); }
+  50% { transform: translate(-5px, 2px) skew(-3deg); }
+  60% { transform: translate(5px, -2px) skew(3deg); }
+  70% { transform: translate(-3px, -1px) skew(-1deg); }
+  80% { transform: translate(3px, 1px) skew(1deg); }
+  90% { transform: translate(-1px, 0) skew(0); }
+  100% { transform: translate(0) skew(0); }
 }
 
 .title-line {

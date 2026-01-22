@@ -3,6 +3,14 @@ import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-mo
 import { Link } from 'react-router-dom';
 import './AppleScrollSections.css';
 
+// Import the new Tech Spider Web component
+import TechSpiderWeb from './TechSpiderWeb';
+import './TechSpiderWeb.css';
+
+// Import the 3D Global Offices component
+import GlobalOffices3D from './GlobalOffices3D';
+import './GlobalOffices3D.css';
+
 // Smooth scroll hook for Apple-like animations
 function useParallax(value, distance) {
   return useTransform(value, [0, 1], [-distance, distance]);
@@ -106,11 +114,12 @@ function AboutSection() {
 }
 
 // ============================================
-// SECTION 2: Services Showcase (Sticky)
+// SECTION 2: Services Showcase - ENHANCED with Visual Flair
 // ============================================
 function ServicesSection() {
   const containerRef = useRef(null);
   const [activeService, setActiveService] = useState(0);
+  const isInView = useInView(containerRef, { once: false, amount: 0.1 });
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -125,7 +134,8 @@ function ServicesSection() {
       description: 'Secure, scalable fintech & blockchain platforms built to transform payments, lending, and risk management. Trusted by City Bank, HSBC, MetLife, and PayPal.',
       stats: ['$3B+ Transactions', '446K+ Users', '99.9% Uptime'],
       color: '#00d4ff',
-      icon: '🏦'
+      icon: '🏦',
+      clients: ['City Bank', 'HSBC', 'MetLife', 'PayPal']
     },
     {
       id: 'healthcare',
@@ -134,7 +144,8 @@ function ServicesSection() {
       description: 'Regulation-first pharma & healthcare software: GDPR-compliant platforms supporting HCPs, education & analytics. Serving Incepta, Aristopharma, and European biopharma leaders.',
       stats: ['GDPR Compliant', 'Multi-language', 'AEM Powered'],
       color: '#00ff88',
-      icon: '🏥'
+      icon: '🏥',
+      clients: ['Incepta', 'Aristopharma', 'EU Biopharma']
     },
     {
       id: 'telecom',
@@ -143,7 +154,8 @@ function ServicesSection() {
       description: 'Enterprise-grade telecom applications that scale securely to serve millions with reliability & speed. Powering Grameenphone, Robi, British Telecom, and Telenor.',
       stats: ['Millions Served', '40% Error Reduction', 'Real-time Analytics'],
       color: '#9333ea',
-      icon: '📡'
+      icon: '📡',
+      clients: ['Grameenphone', 'British Telecom', 'Telenor']
     },
     {
       id: 'retail',
@@ -152,7 +164,8 @@ function ServicesSection() {
       description: 'Smart retail systems streamlining inventory, customer journeys & omnichannel sales. Built the #1 retail platform for Shwapno with microservice architecture.',
       stats: ['100K+ Downloads', 'Microservices', 'Real-time Inventory'],
       color: '#ff6b35',
-      icon: '🛒'
+      icon: '🛒',
+      clients: ['Shwapno', 'Othoba', 'PRAN-RFL']
     },
     {
       id: 'edtech',
@@ -161,7 +174,8 @@ function ServicesSection() {
       description: 'LMS solutions built with Moodle: live classes, assessments, compliance & reporting. Our Proctoring Pro plugin is used on 2157+ sites worldwide.',
       stats: ['2157+ Sites', 'AI Proctoring', 'SCORM Compliant'],
       color: '#ffd700',
-      icon: '📚'
+      icon: '📚',
+      clients: ['Moodle', 'Cambridge', 'Global EdTech']
     }
   ];
 
@@ -177,69 +191,216 @@ function ServicesSection() {
     return () => unsubscribe();
   }, [scrollYProgress, services.length]);
 
+  // Calculate rotation for the circular visualization
+  const circleRotation = useTransform(scrollYProgress, [0, 1], [0, -360]);
+
   return (
-    <section ref={containerRef} className="services-sticky-section">
+    <section ref={containerRef} className="services-sticky-section services-enhanced">
+      {/* Scroll Progress Indicator - Fixed on screen */}
+      <div className="scroll-progress-fixed">
+        <div className="progress-track">
+          <motion.div
+            className="progress-fill"
+            style={{ scaleY: scrollYProgress }}
+          />
+        </div>
+        <div className="progress-labels">
+          {services.map((s, i) => (
+            <motion.div
+              key={s.id}
+              className={`progress-label ${activeService === i ? 'active' : ''}`}
+              style={{ '--label-color': s.color }}
+              animate={{ opacity: activeService === i ? 1 : 0.3 }}
+            >
+              <span className="label-dot" />
+              <span className="label-text">{s.title}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Scroll Instruction */}
+      <motion.div
+        className="scroll-instruction"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isInView ? 1 : 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <motion.div
+          className="scroll-mouse"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <div className="mouse-wheel" />
+        </motion.div>
+        <span>Scroll to explore industries</span>
+      </motion.div>
+
       <div className="services-sticky-container">
-        {/* Left side - Sticky content */}
-        <div className="services-sticky-left">
-          <span className="section-eyebrow">OUR EXPERTISE</span>
+        {/* Left side - Circular Visualization */}
+        <div className="services-sticky-left services-visual">
+          <motion.div
+            className="services-circle-container"
+            style={{ rotate: circleRotation }}
+          >
+            {/* Central hub */}
+            <div className="services-hub">
+              <span className="hub-text">BS23</span>
+              <div className="hub-ring ring-1" />
+              <div className="hub-ring ring-2" />
+              <div className="hub-ring ring-3" />
+            </div>
+
+            {/* Orbiting service icons */}
+            {services.map((service, i) => {
+              const angle = (i / services.length) * 360;
+              return (
+                <motion.div
+                  key={service.id}
+                  className={`orbit-item ${activeService === i ? 'active' : ''}`}
+                  style={{
+                    '--orbit-angle': `${angle}deg`,
+                    '--orbit-color': service.color,
+                  }}
+                  animate={{
+                    scale: activeService === i ? 1.3 : 1,
+                    filter: activeService === i ? `drop-shadow(0 0 20px ${service.color})` : 'none'
+                  }}
+                >
+                  <div className="orbit-icon">{service.icon}</div>
+                  <div className="orbit-connector" />
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Section number */}
+          <motion.div
+            className="section-number"
+            style={{ '--active-color': services[activeService].color }}
+          >
+            <span className="number-current">0{activeService + 1}</span>
+            <span className="number-divider">/</span>
+            <span className="number-total">0{services.length}</span>
+          </motion.div>
+        </div>
+
+        {/* Right side - Content */}
+        <div className="services-sticky-right services-content-enhanced">
+          <motion.div
+            className="section-eyebrow"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+          >
+            OUR EXPERTISE
+          </motion.div>
           <h2 className="services-title">
             Industries We
             <span className="gradient-word"> Transform</span>
           </h2>
 
-          {/* Service tabs */}
-          <div className="services-tabs">
-            {services.map((service, i) => (
-              <motion.button
-                key={service.id}
-                className={`service-tab ${activeService === i ? 'active' : ''}`}
-                onClick={() => setActiveService(i)}
-                style={{ '--tab-color': service.color }}
-                whileHover={{ x: 10 }}
-              >
-                <span className="tab-icon">{service.icon}</span>
-                <span className="tab-title">{service.title}</span>
-                <span className="tab-indicator" />
-              </motion.button>
-            ))}
-          </div>
-        </div>
-
-        {/* Right side - Animated content */}
-        <div className="services-sticky-right">
+          {/* Active service content */}
           {services.map((service, i) => (
             <motion.div
               key={service.id}
-              className={`service-content ${activeService === i ? 'active' : ''}`}
-              initial={{ opacity: 0, y: 50 }}
+              className={`service-content-card ${activeService === i ? 'active' : ''}`}
+              initial={{ opacity: 0, x: 50 }}
               animate={{
                 opacity: activeService === i ? 1 : 0,
-                y: activeService === i ? 0 : 50,
-                scale: activeService === i ? 1 : 0.95
+                x: activeService === i ? 0 : 50,
+                scale: activeService === i ? 1 : 0.9
               }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
               style={{ '--service-color': service.color }}
             >
-              <div className="service-icon-large">{service.icon}</div>
-              <h3 className="service-headline">{service.headline}</h3>
+              <div className="service-header">
+                <div className="service-icon-wrapper">
+                  <span className="service-icon-bg">{service.icon}</span>
+                  <motion.div
+                    className="icon-pulse"
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                </div>
+                <div className="service-title-group">
+                  <h3 className="service-headline">{service.headline}</h3>
+                  <span className="service-subtitle">{service.title}</span>
+                </div>
+              </div>
+
               <p className="service-description">{service.description}</p>
 
-              <div className="service-stats">
+              <div className="service-stats-grid">
                 {service.stats.map((stat, j) => (
-                  <span key={j} className="stat-pill">{stat}</span>
+                  <motion.div
+                    key={j}
+                    className="stat-card"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={activeService === i ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: j * 0.1 }}
+                  >
+                    <span className="stat-value">{stat}</span>
+                  </motion.div>
                 ))}
               </div>
 
-              <Link to="/solutions" className="service-cta">
-                Learn More <span>→</span>
+              <div className="service-clients">
+                <span className="clients-label">Trusted by:</span>
+                <div className="clients-list">
+                  {service.clients.map((client, k) => (
+                    <span key={k} className="client-name">{client}</span>
+                  ))}
+                </div>
+              </div>
+
+              <Link to="/solutions" className="service-cta-btn">
+                <span>Explore {service.title}</span>
+                <motion.span
+                  className="cta-arrow"
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >→</motion.span>
               </Link>
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Progress indicator */}
+      {/* Background visual effects */}
+      <div className="services-bg-effects">
+        <motion.div
+          className="bg-glow"
+          animate={{
+            background: `radial-gradient(circle at 30% 50%, ${services[activeService].color}20 0%, transparent 50%)`
+          }}
+          transition={{ duration: 0.5 }}
+        />
+        <div className="bg-grid-pattern" />
+        <div className="floating-particles">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="particle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                '--particle-color': services[activeService].color
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 0.8, 0.3]
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Progress bar at bottom */}
       <motion.div
         className="scroll-progress"
         style={{ scaleX: scrollYProgress }}
@@ -779,8 +940,8 @@ export default function AppleScrollSections() {
       <AboutSection />
       <ServicesSection />
       <CaseStudiesSection />
-      <TechStackSection />
-      <GlobalSection />
+      <TechSpiderWeb />
+      <GlobalOffices3D />
       <AwardsSection />
       <FinalCTASection />
     </div>

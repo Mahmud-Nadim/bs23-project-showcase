@@ -413,9 +413,18 @@ function Scene({ mouse }) {
 // Hero Content Overlay
 function HeroContent() {
   const [loaded, setLoaded] = useState(false);
+  const [glitchActive, setGlitchActive] = useState(false);
 
   useEffect(() => {
     setTimeout(() => setLoaded(true), 500);
+
+    // Trigger glitch effect periodically
+    const glitchInterval = setInterval(() => {
+      setGlitchActive(true);
+      setTimeout(() => setGlitchActive(false), 200);
+    }, 3000);
+
+    return () => clearInterval(glitchInterval);
   }, []);
 
   const containerVariants = {
@@ -436,19 +445,6 @@ function HeroContent() {
     }
   };
 
-  const glitchVariants = {
-    animate: {
-      textShadow: [
-        '0 0 0 transparent',
-        '2px 2px 0 #00d4ff, -2px -2px 0 #ff4444',
-        '0 0 0 transparent',
-        '-2px 2px 0 #00ff88, 2px -2px 0 #9333ea',
-        '0 0 0 transparent',
-      ],
-      transition: { duration: 0.5, repeat: Infinity, repeatDelay: 5 }
-    }
-  };
-
   return (
     <motion.div
       className="neural-hero-content"
@@ -456,27 +452,65 @@ function HeroContent() {
       initial="hidden"
       animate={loaded ? "visible" : "hidden"}
     >
+      {/* Floating Code Symbols */}
+      <div className="hero-code-symbols">
+        {['{ }', '< />', '[ ]', '( )', '=>', '&&', '||', '::'].map((symbol, i) => (
+          <motion.span
+            key={i}
+            className="floating-code-symbol"
+            style={{
+              left: `${10 + (i * 12)}%`,
+              top: `${15 + (i % 3) * 25}%`,
+            }}
+            animate={{
+              y: [0, -20, 0],
+              opacity: [0.1, 0.3, 0.1],
+              rotate: [0, 10, -10, 0],
+            }}
+            transition={{
+              duration: 4 + i,
+              repeat: Infinity,
+              delay: i * 0.5,
+            }}
+          >
+            {symbol}
+          </motion.span>
+        ))}
+      </div>
+
       {/* Logo */}
       <motion.div className="hero-logo-container" variants={itemVariants}>
-        <img
-          src="https://cdn.brandfetch.io/idlkM40qxI/w/399/h/399/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1768681807852"
-          alt="Brain Station 23"
-          className="hero-official-logo"
-        />
+        <div className="logo-glitch-wrapper">
+          <img
+            src="https://cdn.brandfetch.io/idlkM40qxI/w/399/h/399/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1768681807852"
+            alt="Brain Station 23"
+            className="hero-official-logo"
+          />
+          <div className="logo-glitch-overlay" />
+        </div>
       </motion.div>
 
       {/* Top label */}
       <motion.div className="hero-top-label" variants={itemVariants}>
         <span className="label-line" />
-        <span className="label-text">SINCE 2006 | 800+ ENGINEERS | 30+ COUNTRIES</span>
+        <span className="label-text">
+          <span className="code-bracket">{'<'}</span>
+          SINCE 2006 | 800+ ENGINEERS | 30+ COUNTRIES
+          <span className="code-bracket">{'/>'}</span>
+        </span>
         <span className="label-line" />
       </motion.div>
 
-      {/* Main title */}
+      {/* Main title with INTENSE GLITCH */}
       <motion.h1 className="neural-hero-title" variants={itemVariants}>
-        <motion.span className="title-line" variants={glitchVariants} animate="animate">
-          BRAIN STATION 23
-        </motion.span>
+        <div className={`glitch-title-container ${glitchActive ? 'glitch-active' : ''}`}>
+          <span className="glitch-title" data-text="BRAIN STATION 23">
+            BRAIN STATION 23
+          </span>
+          <span className="glitch-title-layer glitch-r" aria-hidden="true">BRAIN STATION 23</span>
+          <span className="glitch-title-layer glitch-g" aria-hidden="true">BRAIN STATION 23</span>
+          <span className="glitch-title-layer glitch-b" aria-hidden="true">BRAIN STATION 23</span>
+        </div>
       </motion.h1>
 
       {/* Subtitle with typewriter effect */}

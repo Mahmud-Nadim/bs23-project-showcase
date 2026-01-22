@@ -1,4 +1,5 @@
 /* Brain Station 23 - Design System */
+@import './styles/GlitchEffects.css';
 
 :root {
   /* Dark Mode (Default) */
