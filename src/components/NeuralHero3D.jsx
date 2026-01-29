@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Stars, Trail, MeshDistortMaterial, Sparkles, Environment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 // Neural Network Particle System
 function NeuralParticles({ count = 500, mouse }) {
@@ -548,23 +549,25 @@ function HeroContent() {
 
       {/* CTA Buttons */}
       <motion.div className="neural-hero-cta" variants={itemVariants}>
-        <motion.a
-          href="#explore"
-          className="cta-btn cta-primary"
-          whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(0, 212, 255, 0.6)' }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="btn-text">Explore Our Work</span>
-          <span className="btn-icon">→</span>
-        </motion.a>
-        <motion.a
-          href="#contact"
-          className="cta-btn cta-secondary"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="btn-text">Start a Project</span>
-        </motion.a>
+        <Link to="/projects" style={{ textDecoration: 'none' }}>
+          <motion.div
+            className="cta-btn cta-primary"
+            whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(0, 212, 255, 0.6)' }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="btn-text">Explore Our Work</span>
+            <span className="btn-icon">→</span>
+          </motion.div>
+        </Link>
+        <Link to="/solution-builder" style={{ textDecoration: 'none' }}>
+          <motion.div
+            className="cta-btn cta-secondary"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="btn-text">Start a Project</span>
+          </motion.div>
+        </Link>
       </motion.div>
 
       {/* Certifications */}

@@ -307,6 +307,128 @@ export default function SolutionBuilder() {
 
   const estimate = calculateEstimate();
 
+  const generateProposalPDF = () => {
+    const industryData = industries.find(i => i.id === selectedIndustry);
+    const selectedFeatureDetails = selectedFeatures.map(fId => featureModules.find(f => f.id === fId));
+    const selectedTechDetails = selectedTech.map(tId => techStacks.find(t => t.id === tId));
+
+    const proposalHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Project Proposal - Brain Station 23</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a0f; color: #fff; padding: 40px; }
+          .proposal { max-width: 800px; margin: 0 auto; }
+          .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #00d4ff; padding-bottom: 30px; }
+          .logo { font-size: 28px; font-weight: bold; color: #00d4ff; margin-bottom: 10px; }
+          .title { font-size: 36px; color: #fff; margin-bottom: 10px; }
+          .subtitle { color: #888; font-size: 14px; }
+          .section { background: #111118; border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid #222; }
+          .section-title { font-size: 18px; color: #00d4ff; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+          .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; }
+          .info-label { color: #888; }
+          .info-value { color: #fff; font-weight: 500; }
+          .feature-list { display: grid; gap: 10px; }
+          .feature-item { background: #1a1a22; padding: 12px 15px; border-radius: 8px; display: flex; align-items: center; gap: 10px; }
+          .feature-icon { font-size: 20px; }
+          .feature-name { flex: 1; }
+          .feature-weeks { color: #00ff88; font-size: 12px; }
+          .tech-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+          .tech-badge { background: #1a1a22; padding: 8px 15px; border-radius: 20px; font-size: 13px; }
+          .estimate-box { background: linear-gradient(135deg, #00d4ff22, #00ff8822); border: 2px solid #00d4ff; text-align: center; padding: 30px; }
+          .estimate-label { font-size: 14px; color: #888; margin-bottom: 5px; }
+          .estimate-value { font-size: 42px; font-weight: bold; color: #00ff88; }
+          .estimate-timeline { font-size: 24px; color: #00d4ff; margin-top: 15px; }
+          .footer { text-align: center; margin-top: 40px; color: #666; font-size: 12px; }
+          .disclaimer { background: #1a1a22; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 12px; color: #888; }
+        </style>
+      </head>
+      <body>
+        <div class="proposal">
+          <div class="header">
+            <div class="logo">BRAIN STATION 23</div>
+            <div class="title">Project Proposal</div>
+            <div class="subtitle">Generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Project Overview</div>
+            <div class="info-row">
+              <span class="info-label">Project Name</span>
+              <span class="info-value">${projectName || 'Custom Solution'}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Industry</span>
+              <span class="info-value">${industryData ? `${industryData.icon} ${industryData.name}` : 'Not specified'}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Total Features</span>
+              <span class="info-value">${selectedFeatures.length} modules</span>
+            </div>
+          </div>
+
+          ${selectedFeatureDetails.length > 0 ? `
+          <div class="section">
+            <div class="section-title">Selected Features</div>
+            <div class="feature-list">
+              ${selectedFeatureDetails.map(f => `
+                <div class="feature-item">
+                  <span class="feature-icon">${f.icon}</span>
+                  <span class="feature-name">${f.name}</span>
+                  <span class="feature-weeks">${f.weeks} weeks</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          ` : ''}
+
+          ${selectedTechDetails.length > 0 ? `
+          <div class="section">
+            <div class="section-title">Technology Stack</div>
+            <div class="tech-grid">
+              ${selectedTechDetails.map(t => `
+                <span class="tech-badge">${t.icon} ${t.name}</span>
+              `).join('')}
+            </div>
+          </div>
+          ` : ''}
+
+          <div class="section estimate-box">
+            <div class="estimate-label">ESTIMATED INVESTMENT</div>
+            <div class="estimate-value">$${estimate.cost.toLocaleString()}</div>
+            <div class="estimate-timeline">Estimated Timeline: ${estimate.weeks} weeks</div>
+          </div>
+
+          <div class="disclaimer">
+            <strong>Disclaimer:</strong> This is an automated estimate based on selected features and industry.
+            Final pricing will be determined after a detailed requirements analysis and consultation.
+            Contact us to schedule a meeting and discuss your specific needs.
+          </div>
+
+          <div class="footer">
+            <p>Brain Station 23 | Bangladesh's #1 Software Company</p>
+            <p>CMMI Level 3 | ISO 27001 | ISO 9001</p>
+            <p>contact@brainstation-23.com | www.brainstation-23.com</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Create a new window with the proposal content for printing/saving as PDF
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(proposalHTML);
+    printWindow.document.close();
+    printWindow.focus();
+
+    // Auto-trigger print dialog after content loads
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  };
+
   return (
     <div className="solution-builder">
       {/* 3D Background Canvas */}
@@ -465,7 +587,6 @@ export default function SolutionBuilder() {
                             <div className="feature-info">
                               <h4>{feature.name}</h4>
                               <div className="feature-meta">
-                                <span className="feature-price">${feature.price.toLocaleString()}</span>
                                 <span className="feature-time">{feature.weeks} weeks</span>
                               </div>
                             </div>
@@ -637,19 +758,8 @@ export default function SolutionBuilder() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <h3>Estimated Investment</h3>
+                  <h3>Project Estimate</h3>
                   <div className="estimate-details">
-                    <div className="estimate-item">
-                      <span className="estimate-label">Development Cost</span>
-                      <motion.span
-                        className="estimate-value cost"
-                        key={estimate.cost}
-                        initial={{ scale: 1.2 }}
-                        animate={{ scale: 1 }}
-                      >
-                        ${estimate.cost.toLocaleString()}
-                      </motion.span>
-                    </div>
                     <div className="estimate-item">
                       <span className="estimate-label">Timeline</span>
                       <motion.span
@@ -663,7 +773,7 @@ export default function SolutionBuilder() {
                     </div>
                   </div>
                   <p className="estimate-note">
-                    * Final quote may vary based on detailed requirements
+                    Download the proposal below to view estimated investment
                   </p>
                 </motion.div>
               </div>
@@ -677,6 +787,7 @@ export default function SolutionBuilder() {
               >
                 <motion.button
                   className="btn-download"
+                  onClick={generateProposalPDF}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -736,12 +847,12 @@ export default function SolutionBuilder() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="estimate-preview">
-            <span className="estimate-label">Estimated Cost:</span>
-            <span className="estimate-amount">${estimate.cost.toLocaleString()}</span>
-          </div>
-          <div className="estimate-preview">
             <span className="estimate-label">Timeline:</span>
             <span className="estimate-amount">{estimate.weeks} weeks</span>
+          </div>
+          <div className="estimate-preview">
+            <span className="estimate-label">Features:</span>
+            <span className="estimate-amount">{selectedFeatures.length} selected</span>
           </div>
         </motion.div>
       </footer>
