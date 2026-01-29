@@ -6,6 +6,11 @@
   background: #000;
 }
 
+[data-theme="light"] .landing-page,
+[data-theme="light"] .landing-page-epic {
+  background: #f8fafc;
+}
+
 /* ============================================
    ENHANCED CLIENTS MARQUEE
    ============================================ */
@@ -16,6 +21,31 @@
   overflow: hidden;
   background: linear-gradient(180deg, #0a0a1a 0%, #000 50%, #0a0a1a 100%);
   cursor: crosshair;
+}
+
+[data-theme="light"] .clients-marquee-enhanced {
+  background: linear-gradient(180deg, #f0f4f8 0%, #e8f4ff 50%, #f0f4f8 100%);
+}
+
+[data-theme="light"] .marquee-label {
+  color: #0891b2;
+  background: rgba(8, 145, 178, 0.08);
+  border: 1px solid rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .marquee-item {
+  color: rgba(15, 23, 42, 0.6);
+  text-shadow:
+    0 0 10px rgba(8, 145, 178, 0.3),
+    0 0 20px rgba(8, 145, 178, 0.1);
+}
+
+[data-theme="light"] .marquee-item:hover {
+  color: #0891b2;
+}
+
+[data-theme="light"] .marquee-hint {
+  color: rgba(15, 23, 42, 0.4);
 }
 
 .marquee-header {

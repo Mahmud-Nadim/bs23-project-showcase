@@ -699,3 +699,180 @@
     opacity: 0.8;
   }
 }
+
+/* ============================================
+   LIGHT MODE STYLES
+   ============================================ */
+
+[data-theme="light"] .neural-hero-container {
+  background: linear-gradient(180deg, #f0f7ff 0%, #e8f4ff 50%, #f5f9ff 100%);
+}
+
+[data-theme="light"] .neural-overlay {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(8, 145, 178, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 30% at 20% 70%, rgba(5, 150, 105, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.3) 100%);
+}
+
+[data-theme="light"] .neural-grid {
+  opacity: 0.08;
+  background-image:
+    linear-gradient(rgba(8, 145, 178, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 145, 178, 0.4) 1px, transparent 1px);
+}
+
+[data-theme="light"] .neural-hero-content {
+  color: #0f172a;
+}
+
+[data-theme="light"] .hero-official-logo {
+  box-shadow:
+    0 0 30px rgba(8, 145, 178, 0.3),
+    0 0 60px rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .label-line {
+  background: linear-gradient(90deg, transparent, #0891b2, transparent);
+}
+
+[data-theme="light"] .label-text {
+  color: #0891b2;
+}
+
+[data-theme="light"] .floating-code-symbol {
+  color: #0891b2;
+  opacity: 0.15;
+}
+
+[data-theme="light"] .code-bracket {
+  color: #059669;
+}
+
+[data-theme="light"] .glitch-title {
+  color: #0f172a;
+  text-shadow:
+    0 0 10px rgba(8, 145, 178, 0.4),
+    0 0 20px rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .glitch-title::before {
+  color: #059669;
+}
+
+[data-theme="light"] .glitch-title::after {
+  color: #7c3aed;
+}
+
+[data-theme="light"] .subtitle-prefix {
+  color: #059669;
+}
+
+[data-theme="light"] .subtitle-text {
+  color: rgba(15, 23, 42, 0.8);
+}
+
+[data-theme="light"] .subtitle-cursor {
+  color: #0891b2;
+}
+
+[data-theme="light"] .neural-hero-description {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="light"] .highlight-text {
+  color: #0891b2;
+  text-shadow: 0 0 20px rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="light"] .hero-stats-row {
+  background: rgba(8, 145, 178, 0.05);
+  border: 1px solid rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .hero-stat {
+  border-right: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="light"] .stat-value {
+  background: linear-gradient(135deg, #0891b2, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .stat-label {
+  color: rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="light"] .cta-primary {
+  background: linear-gradient(135deg, #0891b2 0%, #059669 100%);
+  color: #fff;
+  box-shadow:
+    0 0 20px rgba(8, 145, 178, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="light"] .cta-primary:hover {
+  box-shadow:
+    0 0 40px rgba(8, 145, 178, 0.4),
+    0 10px 40px rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .cta-secondary {
+  color: #0f172a;
+  border: 2px solid rgba(15, 23, 42, 0.2);
+}
+
+[data-theme="light"] .cta-secondary:hover {
+  border-color: #0891b2;
+  color: #0891b2;
+  box-shadow: 0 0 30px rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .cert-badge {
+  color: rgba(15, 23, 42, 0.6);
+  background: rgba(8, 145, 178, 0.05);
+  border: 1px solid rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .cert-badge:hover {
+  color: #0891b2;
+  border-color: #0891b2;
+  box-shadow: 0 0 20px rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .scroll-text {
+  color: rgba(15, 23, 42, 0.4);
+}
+
+[data-theme="light"] .scroll-arrow {
+  color: #0891b2;
+  text-shadow: 0 0 10px rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="light"] .neural-hero-container::before {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.3) 2px,
+    rgba(255, 255, 255, 0.3) 4px
+  );
+  opacity: 0.15;
+}
+
+[data-theme="light"] .neural-hero-container::after {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(255, 255, 255, 0.3) 100%
+  );
+}
+
+[data-theme="light"] .neural-hero-container .floating-particle {
+  background: #0891b2;
+  box-shadow: 0 0 10px #0891b2, 0 0 20px rgba(8, 145, 178, 0.5);
+}

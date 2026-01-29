@@ -1742,3 +1742,469 @@
     flex-wrap: wrap;
   }
 }
+
+/* ============================================
+   LIGHT MODE STYLES
+   ============================================ */
+
+[data-theme="light"] .apple-scroll-container {
+  background: linear-gradient(180deg, #f8fafc 0%, #f0f7ff 50%, #f8fafc 100%);
+}
+
+/* About Section Light */
+[data-theme="light"] .about-section {
+  background: linear-gradient(180deg, #f8fafc 0%, #f0f4f8 100%);
+}
+
+[data-theme="light"] .section-eyebrow {
+  color: #0891b2;
+  background: rgba(8, 145, 178, 0.08);
+  border: 1px solid rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .section-headline {
+  color: #0f172a;
+}
+
+[data-theme="light"] .section-subhead {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="light"] .gradient-word {
+  background: linear-gradient(135deg, #0891b2 0%, #059669 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .bg-gradient-orb {
+  opacity: 0.2;
+}
+
+[data-theme="light"] .orb-1 {
+  background: radial-gradient(circle, rgba(8, 145, 178, 0.25) 0%, transparent 70%);
+}
+
+[data-theme="light"] .orb-2 {
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+}
+
+[data-theme="light"] .about-card {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(8, 145, 178, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .about-card::before {
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.08) 0%, transparent 50%);
+}
+
+[data-theme="light"] .about-card:hover {
+  border-color: rgba(8, 145, 178, 0.3);
+  box-shadow: 0 20px 60px rgba(8, 145, 178, 0.1);
+}
+
+[data-theme="light"] .card-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .card-desc {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+/* Services Section Light */
+[data-theme="light"] .services-sticky-section {
+  background: linear-gradient(180deg, #f0f4f8 0%, #e8f4ff 50%, #f0f4f8 100%);
+}
+
+[data-theme="light"] .services-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .service-tab:hover {
+  background: rgba(8, 145, 178, 0.05);
+}
+
+[data-theme="light"] .service-tab.active {
+  background: rgba(8, 145, 178, 0.08);
+}
+
+[data-theme="light"] .tab-title {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="light"] .service-content {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .service-description {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="light"] .stat-pill {
+  background: rgba(8, 145, 178, 0.05);
+}
+
+/* Case Studies Section Light */
+[data-theme="light"] .case-studies-section {
+  background: linear-gradient(180deg, #f0f4f8 0%, #e8f4ff 100%);
+}
+
+[data-theme="light"] .case-study-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .case-study-card:hover {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.1), 0 0 40px color-mix(in srgb, var(--card-color) 15%, transparent);
+}
+
+[data-theme="light"] .case-study-card .card-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .card-description {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+[data-theme="light"] .card-metrics {
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .metric-label {
+  color: rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="light"] .btn-explore {
+  color: #0f172a;
+  border: 2px solid rgba(15, 23, 42, 0.2);
+}
+
+[data-theme="light"] .btn-explore:hover {
+  border-color: #0891b2;
+  color: #0891b2;
+  box-shadow: 0 0 40px rgba(8, 145, 178, 0.2);
+}
+
+/* Tech Stack Section Light */
+[data-theme="light"] .tech-stack-section {
+  background: linear-gradient(180deg, #e8f4ff 0%, #f0f4f8 100%);
+}
+
+[data-theme="light"] .tech-category {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .tech-badge {
+  color: rgba(15, 23, 42, 0.8);
+  background: rgba(8, 145, 178, 0.05);
+  border: 1px solid rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .tech-badge:hover {
+  color: #fff;
+}
+
+[data-theme="light"] .partners-section {
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .partners-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .partner-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .partner-card:hover {
+  background: rgba(8, 145, 178, 0.08);
+  border-color: rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .partner-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .partner-badge {
+  color: #0891b2;
+}
+
+/* Global Section Light */
+[data-theme="light"] .global-section {
+  background: linear-gradient(180deg, #f0f4f8 0%, #e8f4ff 100%);
+}
+
+[data-theme="light"] .office-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .office-card.hq {
+  border-color: rgba(8, 145, 178, 0.2);
+  background: rgba(8, 145, 178, 0.05);
+}
+
+[data-theme="light"] .office-card:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .office-card.hq:hover {
+  box-shadow: 0 20px 60px rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .office-city {
+  color: #0f172a;
+}
+
+[data-theme="light"] .office-country {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+[data-theme="light"] .office-type {
+  color: #0891b2;
+  background: rgba(8, 145, 178, 0.08);
+}
+
+[data-theme="light"] .office-employees {
+  color: rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="light"] .regions-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .region-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .region-name {
+  color: #0891b2;
+}
+
+[data-theme="light"] .region-countries {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+[data-theme="light"] .vision-banner {
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%);
+  border: 1px solid rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .vision-year {
+  color: #fff;
+  background: linear-gradient(135deg, #0891b2, #059669);
+}
+
+[data-theme="light"] .vision-text {
+  color: #0f172a;
+}
+
+[data-theme="light"] .vision-subtext {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+/* Awards Section Light */
+[data-theme="light"] .awards-section {
+  background: linear-gradient(180deg, #e8f4ff 0%, #f0f4f8 100%);
+}
+
+[data-theme="light"] .award-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .award-card:hover {
+  background: rgba(217, 119, 6, 0.05);
+  border-color: rgba(217, 119, 6, 0.2);
+  box-shadow: 0 20px 60px rgba(217, 119, 6, 0.08);
+}
+
+[data-theme="light"] .award-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .award-category {
+  color: #d97706;
+}
+
+[data-theme="light"] .award-project {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+[data-theme="light"] .certifications-row {
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .certs-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .cert-card {
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.08) 0%, rgba(5, 150, 105, 0.08) 100%);
+  border: 1px solid rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .cert-card:hover {
+  box-shadow: 0 10px 40px rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .cert-name {
+  color: #0891b2;
+}
+
+[data-theme="light"] .cert-desc {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+/* Final CTA Section Light */
+[data-theme="light"] .final-cta-section {
+  background: linear-gradient(180deg, #f0f4f8 0%, #e8f4ff 100%);
+}
+
+[data-theme="light"] .cta-eyebrow {
+  color: #0891b2;
+}
+
+[data-theme="light"] .cta-headline {
+  color: #0f172a;
+}
+
+[data-theme="light"] .cta-subtext {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="light"] .cta-primary-btn {
+  color: #fff;
+  background: linear-gradient(135deg, #0891b2 0%, #059669 100%);
+  box-shadow: 0 0 30px rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="light"] .cta-primary-btn:hover {
+  box-shadow: 0 10px 50px rgba(8, 145, 178, 0.4);
+}
+
+[data-theme="light"] .cta-secondary-btn {
+  color: #0f172a;
+  border: 2px solid rgba(15, 23, 42, 0.2);
+}
+
+[data-theme="light"] .cta-secondary-btn:hover {
+  border-color: #0891b2;
+  color: #0891b2;
+}
+
+[data-theme="light"] .contact-link {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+[data-theme="light"] .contact-link:hover {
+  color: #0891b2;
+}
+
+[data-theme="light"] .contact-divider {
+  color: rgba(15, 23, 42, 0.3);
+}
+
+[data-theme="light"] .cta-orb-1 {
+  background: radial-gradient(circle, rgba(8, 145, 178, 0.15) 0%, transparent 70%);
+}
+
+[data-theme="light"] .cta-orb-2 {
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+}
+
+[data-theme="light"] .cta-orb-3 {
+  background: radial-gradient(circle, rgba(5, 150, 105, 0.1) 0%, transparent 70%);
+}
+
+[data-theme="light"] .cta-grid {
+  background-image:
+    linear-gradient(rgba(8, 145, 178, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 145, 178, 0.08) 1px, transparent 1px);
+}
+
+/* Enhanced Services Light */
+[data-theme="light"] .progress-track {
+  background: rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="light"] .label-text {
+  color: rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="light"] .scroll-mouse {
+  border: 2px solid rgba(15, 23, 42, 0.2);
+}
+
+[data-theme="light"] .mouse-wheel {
+  background: #0891b2;
+}
+
+[data-theme="light"] .scroll-instruction span {
+  color: rgba(15, 23, 42, 0.4);
+}
+
+[data-theme="light"] .services-hub {
+  background: linear-gradient(135deg, #0891b2, #059669);
+}
+
+[data-theme="light"] .hub-text {
+  color: #fff;
+}
+
+[data-theme="light"] .hub-ring {
+  border: 1px solid rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .orbit-icon {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .number-divider {
+  color: rgba(15, 23, 42, 0.3);
+}
+
+[data-theme="light"] .number-total {
+  color: rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="light"] .service-content-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .service-subtitle {
+  color: rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="light"] .service-content-card .service-description {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="light"] .stat-card {
+  background: rgba(8, 145, 178, 0.05);
+}
+
+[data-theme="light"] .clients-label {
+  color: rgba(15, 23, 42, 0.4);
+}
+
+[data-theme="light"] .client-name {
+  background: rgba(8, 145, 178, 0.05);
+  color: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="light"] .service-cta-btn {
+  color: #fff;
+}
+
+[data-theme="light"] .bg-grid-pattern {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+}

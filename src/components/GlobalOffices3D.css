@@ -517,3 +517,181 @@
     font-size: 0.5rem;
   }
 }
+
+/* ============================================
+   LIGHT MODE STYLES
+   ============================================ */
+
+/* Main Section */
+[data-theme="light"] .global-offices-section {
+  background: linear-gradient(180deg,
+    #f8fafc 0%,
+    #e8f4ff 20%,
+    #f0f7ff 50%,
+    #e8f4ff 80%,
+    #f8fafc 100%
+  );
+}
+
+/* Header */
+[data-theme="light"] .global-offices-section .section-eyebrow {
+  color: #0891b2;
+  background: rgba(8, 145, 178, 0.1);
+  border-color: rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="light"] .global-offices-section .section-headline {
+  color: #0f172a;
+}
+
+[data-theme="light"] .global-offices-section .gradient-word {
+  background: linear-gradient(135deg, #0891b2 0%, #059669 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .global-offices-section .section-subhead {
+  color: rgba(15, 23, 42, 0.7);
+}
+
+/* Office List Sidebar */
+[data-theme="light"] .office-list-3d {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .office-list-header {
+  background: rgba(8, 145, 178, 0.05);
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .office-list-header h3 {
+  color: #0f172a;
+}
+
+[data-theme="light"] .office-count {
+  color: #0891b2;
+  background: rgba(8, 145, 178, 0.1);
+}
+
+[data-theme="light"] .office-list-items::-webkit-scrollbar-thumb {
+  background: rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="light"] .office-list-item:hover {
+  background: rgba(8, 145, 178, 0.05);
+  border-color: rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .office-list-item.active {
+  background: rgba(8, 145, 178, 0.1);
+  border-color: rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="light"] .office-list-item.hq.active {
+  background: rgba(5, 150, 105, 0.1);
+  border-color: rgba(5, 150, 105, 0.3);
+}
+
+[data-theme="light"] .office-item-city {
+  color: #0f172a;
+}
+
+[data-theme="light"] .office-item-country {
+  color: rgba(15, 23, 42, 0.5);
+}
+
+/* Globe Container */
+[data-theme="light"] .globe-container {
+  background: rgba(232, 244, 255, 0.3);
+  border-radius: 30px;
+}
+
+[data-theme="light"] .globe-overlay-info {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .globe-stat-value {
+  color: #0891b2;
+  text-shadow: none;
+}
+
+[data-theme="light"] .globe-stat-label {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+/* 3D Labels */
+[data-theme="light"] .office-label-3d {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(8, 145, 178, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .office-city-3d {
+  color: #0f172a;
+}
+
+[data-theme="light"] .office-country-3d {
+  color: #0891b2;
+}
+
+/* Office Card */
+[data-theme="light"] .office-card-3d {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .office-card-3d.active {
+  border-color: rgba(8, 145, 178, 0.3);
+}
+
+[data-theme="light"] .office-card-header {
+  background: linear-gradient(180deg, rgba(8, 145, 178, 0.08) 0%, transparent 100%);
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .hq-badge {
+  background: linear-gradient(135deg, #059669, #0891b2);
+}
+
+[data-theme="light"] .office-card-city {
+  color: #0f172a;
+}
+
+[data-theme="light"] .office-card-country {
+  color: #0891b2;
+}
+
+[data-theme="light"] .detail-text {
+  color: rgba(15, 23, 42, 0.75);
+}
+
+/* Footer */
+[data-theme="light"] .footer-note {
+  color: rgba(15, 23, 42, 0.6);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .pulse-dot {
+  background: #059669;
+}
+
+@keyframes pulseDotLight {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(5, 150, 105, 0);
+  }
+}
+
+[data-theme="light"] .pulse-dot {
+  animation: pulseDotLight 2s ease-in-out infinite;
+}

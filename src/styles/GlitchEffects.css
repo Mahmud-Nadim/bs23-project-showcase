@@ -751,3 +751,218 @@
     filter: hue-rotate(0deg);
   }
 }
+
+/* ============================================
+   LIGHT MODE STYLES
+   ============================================ */
+
+/* Glitch Text - Adjusted colors for light mode */
+[data-theme="light"] .glitch-text::before {
+  color: #059669;
+  text-shadow: 0 0 8px rgba(5, 150, 105, 0.5), 0 0 15px rgba(5, 150, 105, 0.3);
+}
+
+[data-theme="light"] .glitch-text::after {
+  color: #0891b2;
+  text-shadow: 0 0 8px rgba(8, 145, 178, 0.5), 0 0 15px rgba(8, 145, 178, 0.3);
+}
+
+/* Glitch Intense - Light mode */
+[data-theme="light"] .glitch-intense::before {
+  text-shadow: -3px 0 #7c3aed, 0 0 12px rgba(124, 58, 237, 0.4);
+}
+
+[data-theme="light"] .glitch-intense::after {
+  text-shadow: 3px 0 #0891b2, 0 0 12px rgba(8, 145, 178, 0.4);
+}
+
+/* Scanlines - Subtler in light mode */
+[data-theme="light"] .scanlines::after {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+/* Code Rain - Light mode colors */
+[data-theme="light"] .code-rain-column {
+  color: #059669;
+  text-shadow: 0 0 8px rgba(5, 150, 105, 0.4);
+  opacity: 0.4;
+}
+
+/* Terminal Cursor */
+[data-theme="light"] .terminal-cursor {
+  background: #0891b2;
+}
+
+/* Typing Effect */
+[data-theme="light"] .typing-effect {
+  border-right-color: #0891b2;
+}
+
+/* Hex Border */
+[data-theme="light"] .hex-border {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="light"] .hex-border::before {
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.1), transparent);
+}
+
+/* Circuit Pattern */
+[data-theme="light"] .circuit-pattern {
+  background-image:
+    linear-gradient(90deg, rgba(8, 145, 178, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(8, 145, 178, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 25px 25px, rgba(8, 145, 178, 0.1) 2px, transparent 2px);
+}
+
+/* Neon Text - Light mode */
+[data-theme="light"] .neon-text {
+  color: #0891b2;
+  text-shadow:
+    0 0 5px rgba(8, 145, 178, 0.3),
+    0 0 10px rgba(8, 145, 178, 0.2),
+    0 0 20px rgba(8, 145, 178, 0.15);
+}
+
+@keyframes neonPulseLight {
+  from {
+    text-shadow:
+      0 0 5px rgba(8, 145, 178, 0.3),
+      0 0 10px rgba(8, 145, 178, 0.2),
+      0 0 20px rgba(8, 145, 178, 0.15);
+  }
+  to {
+    text-shadow:
+      0 0 2px rgba(8, 145, 178, 0.2),
+      0 0 5px rgba(8, 145, 178, 0.15),
+      0 0 10px rgba(8, 145, 178, 0.1);
+  }
+}
+
+[data-theme="light"] .neon-text {
+  animation: neonPulseLight 2s ease-in-out infinite alternate;
+}
+
+/* Code Brackets */
+[data-theme="light"] .code-brackets::before,
+[data-theme="light"] .code-brackets::after,
+[data-theme="light"] .code-brackets-angle::before,
+[data-theme="light"] .code-brackets-angle::after,
+[data-theme="light"] .code-brackets-square::before,
+[data-theme="light"] .code-brackets-square::after {
+  color: #0891b2;
+  opacity: 0.6;
+}
+
+/* Binary Background */
+[data-theme="light"] .binary-bg::before {
+  color: rgba(8, 145, 178, 0.08);
+}
+
+/* Data Stream */
+[data-theme="light"] .data-stream {
+  background: linear-gradient(90deg, transparent, #0891b2, #059669, #0891b2, transparent);
+}
+
+/* Pixel Corners */
+[data-theme="light"] .pixel-corners::before,
+[data-theme="light"] .pixel-corners::after {
+  border-color: #0891b2;
+}
+
+/* Hologram */
+[data-theme="light"] .hologram {
+  background: linear-gradient(
+    45deg,
+    rgba(8, 145, 178, 0.05),
+    rgba(5, 150, 105, 0.05),
+    rgba(124, 58, 237, 0.05)
+  );
+  border: 1px solid rgba(8, 145, 178, 0.2);
+}
+
+[data-theme="light"] .hologram::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(8, 145, 178, 0.1),
+    transparent
+  );
+}
+
+/* Code Symbol */
+[data-theme="light"] .code-symbol {
+  color: #0891b2;
+  opacity: 0.2;
+}
+
+/* Glitch Box */
+[data-theme="light"] .glitch-box::before {
+  background: linear-gradient(
+    transparent 0%,
+    rgba(5, 150, 105, 0.02) 50%,
+    transparent 100%
+  );
+}
+
+/* Cyber Button */
+[data-theme="light"] .cyber-btn {
+  color: #0891b2;
+  border-color: #0891b2;
+}
+
+[data-theme="light"] .cyber-btn::before {
+  background: #0891b2;
+}
+
+[data-theme="light"] .cyber-btn:hover {
+  color: #fff;
+}
+
+[data-theme="light"] .cyber-btn::after {
+  border-right-color: #059669;
+  border-bottom-color: #059669;
+}
+
+/* Error Glitch */
+[data-theme="light"] .error-glitch {
+  animation: errorGlitchLight 0.5s infinite;
+}
+
+@keyframes errorGlitchLight {
+  0%, 100% {
+    text-shadow: -2px 0 #dc2626, 2px 0 #0891b2;
+    transform: translate(0);
+  }
+  20% {
+    text-shadow: 2px 0 #dc2626, -2px 0 #0891b2;
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    text-shadow: -2px 0 #dc2626, 2px 0 #0891b2;
+    transform: translate(2px, -2px);
+  }
+  60% {
+    text-shadow: 2px 0 #dc2626, -2px 0 #0891b2;
+    transform: translate(-2px, -2px);
+  }
+  80% {
+    text-shadow: -2px 0 #dc2626, 2px 0 #0891b2;
+    transform: translate(2px, 2px);
+  }
+}
+
+/* Cyber Loading */
+[data-theme="light"] .cyber-loading {
+  background: rgba(8, 145, 178, 0.15);
+}
+
+[data-theme="light"] .cyber-loading::after {
+  background: linear-gradient(90deg, transparent, #0891b2, #059669, transparent);
+}
